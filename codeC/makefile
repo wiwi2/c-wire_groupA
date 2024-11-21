@@ -1,5 +1,5 @@
 
-# Définition des variables
+# definition 
 CC = gcc
 CFLAGS = -Wall -Wextra -IcodeC
 SRC_DIR = codeC
@@ -12,9 +12,9 @@ EXEC = $(BIN_DIR)/mon_programme
 # Règle par défaut
 all: $(EXEC)
 
-# Création de l'exécutable
+# creation of the l'exécutable
 $(EXEC): $(OBJ)
-	mkdir -p $(BIN_DIR)
+	mkdir -p $(BIN_DIR) // create bin if bin doesn't exist 
 	$(CC) $^ -o $@
 
 # Compilation des fichiers objets
