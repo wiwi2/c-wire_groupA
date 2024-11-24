@@ -2,6 +2,10 @@
 # taper 'make clean' pour nettoyer les fichiers générés
 # taper 'make re' pour nettoyer et recompiler
 
+
+// à switch en anglais 
+
+
 # Nom de l'exécutable final
 EXEC = prog
 
