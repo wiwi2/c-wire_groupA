@@ -10,10 +10,16 @@
 EXEC = prog
 
 # Liste des fichiers sources
-SRCS = main.c function.c 
+SRCS = main.c function.c
+
+# Répertoire pour les fichiers objets
+OBJ_DIR = tmp
 
 # Liste des fichiers objets générés à partir des sources
 OBJS = $(SRCS:.c=.o)
+
+# Fichiers objets avec le chemin vers le répertoire tmp
+OBJ_TMP = $(addprefix $(OBJ_DIR)/, $(notdir $(OBJS)))
 
 # Options de compilation
 CFLAGS = -Wall -Wextra -Werror -g
@@ -25,20 +31,20 @@ CC = gcc
 all: $(EXEC)
 
 # Règle pour créer l'exécutable
-$(EXEC): $(OBJS)
+$(EXEC): $(OBJ_TMP)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Règle générique pour compiler les fichiers objets
-%.o: %.c
+# Règle générique pour compiler les fichiers objets dans tmp/
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OBJ_DIR)  # Crée le répertoire tmp s'il n'existe pas
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Nettoyage des fichiers générés
 clean:
-	rm -f $(OBJS) $(EXEC)
+	rm -rf $(OBJ_DIR) $(EXEC)
 
 # Cible pour nettoyer et recompiler le projet
 re: clean all
 
 # Indication pour ignorer les erreurs de fichiers inexistants
 .PHONY: all clean re
-
