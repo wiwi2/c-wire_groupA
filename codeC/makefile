@@ -6,7 +6,7 @@
 EXEC = prog
 
 # Liste des fichiers sources
-SRCS = main.c module1.c module2.c
+SRCS = main.c function.c 
 
 # Liste des fichiers objets générés à partir des sources
 OBJS = $(SRCS:.c=.o)
