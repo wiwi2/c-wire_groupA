@@ -1,38 +1,40 @@
+# taper 'make' pour executer tout le programme
+# taper 'make clean' pour nettoyer les fichiers générés
+# taper 'make re' pour nettoyer et recompiler
 
-# definition 
+# Nom de l'exécutable final
+EXEC = prog
+
+# Liste des fichiers sources
+SRCS = main.c module1.c module2.c
+
+# Liste des fichiers objets générés à partir des sources
+OBJS = $(SRCS:.c=.o)
+
+# Options de compilation
+CFLAGS = -Wall -Wextra -Werror -g
+
+# Compilation avec GCC
 CC = gcc
-CFLAGS = -Wall -Wextra -IcodeC
-SRC_DIR = codeC
-OBJ_DIR = tmp
-BIN_DIR = bin
-SRC = $(wildcard $(SRC_DIR)/*.c)
-OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
-EXEC = $(BIN_DIR)/mon_programme
 
-# Règle par défaut
+# Première cible par défaut (compilation du projet)
 all: $(EXEC)
 
-# creation of the l'exécutable
-$(EXEC): $(OBJ)
-	mkdir -p $(BIN_DIR) // create bin if bin doesn't exist 
-	$(CC) $^ -o $@
+# Règle pour créer l'exécutable
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# Compilation des fichiers objets
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
+# Règle générique pour compiler les fichiers objets
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyage des fichiers temporaires et objets
+# Nettoyage des fichiers générés
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -f $(OBJS) $(EXEC)
 
-# Nettoyage complet (y compris fichiers générés pour les tests)
-mrproper: clean
-	rm -rf tests/*.out
+# Cible pour nettoyer et recompiler le projet
+re: clean all
 
-# Exécution de tests
-test: $(EXEC)
-	@echo "Lancement des tests..."
-	./$(EXEC) < input/test_data.txt > tests/output.txt
-
+# Indication pour ignorer les erreurs de fichiers inexistants
+.PHONY: all clean re
 
