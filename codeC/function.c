@@ -1,3 +1,6 @@
+// ici continuer les fonctions et ajouter des commentaires en anglais 
+
+
 #include "structure.h"
 
 AVL* createNodeAVL(int id, int capacity, int conso){
