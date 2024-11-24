@@ -1,5 +1,4 @@
 
-ok
 NOTES PERSO A NE PAS SUPPRIMER POUR L INSTANT ! 
 
 les parametres quon doit mettre ; 
@@ -11,7 +10,7 @@ identifiant de centrale (attention spécial)
 option daide help 
 
 
-à faire : (voir ou mettre ça)
+à faire : (voir ou mettre ça) pour le temps 
 récup le temps dexecution en utilisant : 
 start_time = (date + %s) pour recup en secondes le temps 
 end_time = same
@@ -25,6 +24,10 @@ ranger avec fonctions et main après setre rensegné auprès du prof     HERE
 comment envoyer entre programme c et le shell aller retour...         HERE
 make ok
 puis pour recupérer ? pas trop capté 
+
+pour le fichier csv : ou le mettre ?? il est trop gros pour github... HERE 
+et le chemin... fonctionne comme j ai fait ou ?? voir                 here
+
 
 
 normalement : 
@@ -161,3 +164,4 @@ fi
 --> cat output.txt / par exemple, ça va je sais plus à voir...
 -> mais ca c'est si on ecrit avec le programme c... à faire pour la somme des conso ? je sais pas... 
 voir car probleme de logique 
+
