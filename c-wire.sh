@@ -1,7 +1,7 @@
 
 NOTES PERSO A NE PAS SUPPRIMER POUR L INSTANT ! 
 
-les parametres quon doit mettre ; 
+les parametres quon doit mettre ; ==> enlever les - !
 chemin du fichier (obligatoire)
 type de station (hvb , hva , lv ) (obligatoire)
 type de conso (comp , indiv , all ) (obligatoire) 
@@ -18,15 +18,15 @@ puis : durée = end minus start
 
 à faire aussi 
 ranger les exit dans lodre : ordre perdu à un moment 
-ranger avec fonctions et main après setre rensegné auprès du prof     HERE
+ranger avec fonctions et main après setre rensegné auprès du prof     HERE on s'en fout
 
 
-comment envoyer entre programme c et le shell aller retour...         HERE
-make ok
-puis pour recupérer ? pas trop capté 
+comment envoyer entre programme c et le shell aller retour...         HERE ok
+make ok oui
+puis pour recupérer ? pas trop capté ok normalement < > voir cut tout ca -> simple efficace
 
-pour le fichier csv : ou le mettre ?? il est trop gros pour github... HERE 
-et le chemin... fonctionne comme j ai fait ou ?? voir                 here
+pour le fichier csv : ou le mettre ?? il est trop gros pour github... HERE pas mettre
+et le chemin... fonctionne comme j ai fait ou ?? voir                 here normalement ok 
 
 
 
@@ -38,6 +38,31 @@ avant de passer au traitement
 quand cest clair >> passer au traitement du fichier 
 cut ...
 programme c...
+
+
+programme c > main idea 
+on rentre on scanf 
+on traite avec avl 
+puis on printf 
+et on < > vers un fichier 
+
+ou placer le fichier ? : le placer avec / dans output si on veut ; ou encore nimporte ou on sen fout 
+tmp à vider a chaque fois ! (lire le projet)
+input dossier : pas besoin du coup 
+
+pas besoin de chmod cest le prof qui fait ca
+
+grep  a use pour les lv pour trier par ligne entre comp et indiv du coup 
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -160,8 +185,5 @@ fi
 
 
 
-./programme.c --> on appelle un fichier c pour qu'il soit exécuté puis on récupère sa sortie ?
---> cat output.txt / par exemple, ça va je sais plus à voir...
--> mais ca c'est si on ecrit avec le programme c... à faire pour la somme des conso ? je sais pas... 
-voir car probleme de logique 
+
 
