@@ -40,7 +40,7 @@ cut ...
 programme c...
 
 
-programme c > main idea 
+programme c : main idea 
 on rentre on scanf 
 on traite avec avl 
 puis on printf 
@@ -53,7 +53,7 @@ input dossier : pas besoin du coup
 pas besoin de chmod cest le prof qui fait ca
 
 grep  a use pour les lv pour trier par ligne entre comp et indiv du coup 
-
+tr pour changer - en 0 pour faciliter le calcul des conso 
 
 
 
