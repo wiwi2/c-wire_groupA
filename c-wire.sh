@@ -56,7 +56,10 @@ grep  a use pour les lv pour trier par ligne entre comp et indiv du coup
 tr pour changer - en 0 pour faciliter le calcul des conso 
 
 
-
+dans tests : juste un test comme le projet l'explique : un fichier texte quoi hva indiv ou autre 
+on nomera le truc < hva_indiv.txt par exemple 
+on fera trois cas du coup ? hva , hvb et lv 
+avec des sous cas ..? pour all indiv etc et des cut.. à voir
 
 
 
