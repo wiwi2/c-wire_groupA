@@ -55,8 +55,8 @@ avec des sous cas ..? pour all indiv etc et des cut.. à voir
 
 
 
-
-
+QUESTIONS 
+demander au prof par rapport au check du fichier csv ou de son nom...
 
 
 
@@ -124,6 +124,17 @@ elif [ "$file_path" != *.csv ]
     exit 4
 fi
 
+ICI VOIR SI JE DOIS CHECK L EXTENSION OU LE NOM COMPLET... JSP
+
+# Check if the file is a CSV and named 'DATA_CWIRE.csv'
+if [ "$file_path" != */DATA_CWIRE.csv ]; then
+    echo "Error: The file must be named 'DATA_CWIRE.csv'."
+    exit 4
+fi
+
+
+
+
 
 # Cheching the options : type of station, type of consumer, id of a centrale... 
 # Checking the type of station (-hvb or -hva or -lv) first :
@@ -181,7 +192,7 @@ fi
 
 
 # After checking everything related to the options, we start to get interested in the executable and the prog c... 
-# We store the of the expected executable (defined in our makefile) 
+# We store the name of the expected executable (defined in our makefile) 
 EXECUTABLE="prog"
 
 # Check if the executable file exists
@@ -198,6 +209,21 @@ if [ ! -f "$EXECUTABLE" ]; then # if not, we start the compilation...
         exit 10
     fi
 fi
+
+
+
+
+// voir ou je dois mettre cette ligne... en vrai ici ca fait pas de mal 
+# Replace all '-' with '0' in the file (we use a temporary file in /tmp to avoid overwriting the csv file)
+tr '-' '0' < "$file_path" > /tmp/temp.csv && mv /tmp/temp.csv "$file_path"
+
+
+if [ "$type_station" == hvb && "$type_consumer" == "comp" ]; then 
+    cut -d';' -f2,-1 "$file_path" | ./prog > /output/hvb_comp.txt # remplacer avec les colonnes qui nous intéressent... 
+-> envoie au prog c les lignes et colonnes qui nous interessent, execute le prog c (donc partie ou on devra 
+faire tout ce qui est conso, avl tout ca en fonction des id, puis ecris sa sortie dans data.txt creer dans output 
+-> refaire ça pour tous les cas... 
+-> voir les cas particuliers après (avec les lv notamment)
 
 
 ici sert pas normalement mais voir : (
