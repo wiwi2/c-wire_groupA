@@ -56,7 +56,12 @@ avec des sous cas ..? pour all indiv etc et des cut.. à voir
 
 
 QUESTIONS 
-demander au prof par rapport au check du fichier csv ou de son nom...
+- demander au prof par rapport au check du fichier csv ou de son nom...
+- demander pour lv all minmax... :si l option id centrale est presente est ce qu on doit faire dans tous les cas lv_all_minmax ? 
+mais avec id de centrale
+- et calcul : différence entre capacité et conso ? pour quantité absolue d NRJ..
+
+
 
 
 
@@ -212,18 +217,130 @@ fi
 
 
 
-
-// voir ou je dois mettre cette ligne... en vrai ici ca fait pas de mal 
 # Replace all '-' with '0' in the file (we use a temporary file in /tmp to avoid overwriting the csv file)
 tr '-' '0' < "$file_path" > /tmp/temp.csv && mv /tmp/temp.csv "$file_path"
 
+# cas hvb comp avec check que l'option centraleid existe ou non ... 
+if [[ "$type_station" == "hvb" && "$type_consumer" == "comp" ]]; then 
+    if [ ! -z "$centrale_id" ]; then
+          cut -d ';' -f 1,2,5,7,8 "$file_path" | ./prog > "/output/hvb_comp_${centrale_id}.csv"
+    fi
+    else
+         cut -d ';' -f 2,5,7,8 "$file_path" | ./prog > "/output/hvb_comp.csv"
+    fi
+fi
 
-if [ "$type_station" == hvb && "$type_consumer" == "comp" ]; then 
-    cut -d';' -f2,-1 "$file_path" | ./prog > /output/hvb_comp.txt # remplacer avec les colonnes qui nous intéressent... 
--> envoie au prog c les lignes et colonnes qui nous interessent, execute le prog c (donc partie ou on devra 
-faire tout ce qui est conso, avl tout ca en fonction des id, puis ecris sa sortie dans data.txt creer dans output 
--> refaire ça pour tous les cas... 
--> voir les cas particuliers après (avec les lv notamment)
+# cas hvb indiv avec check que l'option centraleid existe ou non ...
+if [[ "$type_station" == "hvb" && "$type_consumer" == "indiv" ]]; then 
+    if [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,2,6,7,8 "$file_path" | ./prog > "/output/hvb_indiv_${centrale_id}.csv"
+    fi
+else
+    cut -d ';' -f 2,6,7,8 "$file_path" | ./prog > "/output/hvb_indiv.csv"
+fi
+
+
+# cas hva comp avec check que l'option centraleid existe ou non ... 
+if [[ "$type_station" == "hva" && "$type_consumer" == "comp" ]]then 
+    if  [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,3,5,7,8 "$file_path" | ./prog > "/output/hva_comp_${centrale_id}.csv"
+    fi
+    else
+         cut -d ';' -f 3,5,7,8 "$file_path" | ./prog > "/output/hva_comp.csv"
+    fi
+fi
+
+# cas hva indiv avec check que l'option centraleid existe ou non ...
+if [[ "$type_station" == "hva" && "$type_consumer" == "indiv" ]]; then 
+   if  [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,3,6,7,8 "$file_path" | ./prog > "/output/hva_indiv_${centrale_id}.csv"
+   fi
+   else
+        cut -d ';' -f 3,6,7,8 "$file_path" | ./prog > "/output/hva_indiv.csv"
+   fi
+fi
+
+# cas lv indiv avec check de l'option centraleid existe ou non ... ! attention 3 cas ou lv (comp, indiv, all ! + traitement supp pour all) 
+if [[ "$type_station" == "lv" && "$type_consumer" == "comp" ]]; then 
+    if  [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,4,5,7,8 "$file_path" | ./prog > "/output/lv_comp_${centrale_id}.csv"
+    fi
+    else
+        cut -d ';' -f 4,5,7,8 "$file_path" | ./prog > "/output/lv_comp.csv"
+    fi
+fi
+
+# cas lv comp
+if [[ "$type_station" == "lv" && "$type_consumer" == "indiv" ]]; then 
+    if  [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,4,6,7,8 "$file_path" | ./prog > "/output/lv_indiv_${centrale_id}.csv"
+    fi
+    else
+        cut -d ';' -f 4,6,7,8 "$file_path" | ./prog > "/output/lv_indiv.csv"
+    fi
+fi
+
+
+# Case for lv all
+if [[ "$type_station" == "lv" && "$type_consumer" == "all" ]]; then
+    if  [[ ! -z "$centrale_id" ]]; then
+        cut -d ';' -f 1,4-8 "$file_path" | ./prog > "/output/lv_all_${centrale_id}.csv"
+
+        # Extract and sort the 10 posts with the lowest consumption, then process line by line
+        cut -d ';' -f 1,3,2 "/output/lv_all_${centrale_id}.csv" | sort -t ';' -k2 -n | head -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
+
+        # Extract and sort the 10 posts with the highest consumption, then process line by line
+        cut -d ';' -f 1,3,2 "/output/lv_all_${centrale_id}.csv" | sort -t ';' -k2 -n | tail -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+
+        # Remove the last column (the difference column) in lv_all_minmax.csv
+        cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
+
+    fi
+else
+    cut -d ';' -f 4-8 "$file_path" | ./prog > "/output/lv_all.csv"
+
+    # Extract and sort the 10 posts with the lowest consumption, then process line by line
+    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
+
+    # Extract and sort the 10 posts with the highest consumption, then process line by line
+    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+
+    # Remove the last column (the difference column) in lv_all_minmax.csv
+    cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
+fi
+
+
+
+
+
+
+-> dans le main faudra mettre des : ! 
+    // faire des check dans le main... si id de hva ou hvb diff de 0 le prendre et le mettre dans l arbre... puis faire la somme...
+   // faudra faire en sorte dans le main que si le id de la company est différent de 0, alors on va prendre le load et lajouter...
+
+
+
+- attention pour lv all-> traitement supplémentaire // utilisation de head et tail ? voir peut etre à la place de sort ? 
+- traitement de base ok... 
+
+/!\
+- maisaussi : un fichier avec les 10 postes avec le plu de conso
+et les 10 avec le moins > fichier lv_all_minmax.csv
+-> quantité absolue d énergie consommée en trop... attention ici...
+le tri se fera surement dans le shell.. (i guess) normalement cest bon mais à faire marcher...!!
+
+
+
+-> plus tard ajouter en début de fichier les titres...
+
+->pas oublier que ca sera trié par capacité croissante...!
+
+
+
+
+
+
+
 
 
 ici sert pas normalement mais voir : (
@@ -231,10 +348,6 @@ ici sert pas normalement mais voir : (
 ./"$EXECUTABLE" "$@" // on rentre dans le programme c du coup ici ... ? voir quoi faire après )
 
 
-if hva indiv ... 
-cut ... ? faire un fichier avec les trucs intéréssants...
-puis envoyer vers le programme c pour qu il lise et prenne ce qui est intéressant directement 
-et fait donc la somme des conso (regarder photo... tout passe par le cut et les sorties > < )
 
 
 
