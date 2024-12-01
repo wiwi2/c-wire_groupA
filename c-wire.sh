@@ -17,6 +17,10 @@ end_time = same
 puis : durée = end minus start 
 
 
+-> g mis le start time... mtn faut mettre le end time bien sur...
+faire d abord partie c... il faut qu elle soit opperationnelle...
+ensuite penser à faire l option avec gnuplot... 
+
 
 comment envoyer entre programme c et le shell aller retour...  : cut .. < > 
 puis pour recupérer : ok normalement < > voir cut tout ca -> simple efficace
@@ -60,8 +64,9 @@ QUESTIONS
 - demander pour lv all minmax... :si l option id centrale est presente est ce qu on doit faire dans tous les cas lv_all_minmax ? 
 mais avec id de centrale
 - et calcul : différence entre capacité et conso ? pour quantité absolue d NRJ..
-
-
+- pendant qu on calcul le temps : 0.0 pour tout ce qui est check des paramètres ..? 
+    donc le start time il est avant la verif des parametres pour tout prendre..?
+- voir pour l extension du fichier ; on check le nom entier ou l extension suffit ?
 
 
 
@@ -93,11 +98,53 @@ help() {
     echo "If you use -h, regardless of other option(s), the help will be displayed."
 }
 
+
+# Check if the "tmp" directory exists
+if [[ -d "tmp" ]]; then
+    # If it exists, we remove all files in "tmp" but keep the directory itself
+    rm -rf tmp/*
+else
+    # If "tmp" doesn't exist, create it
+    mkdir -p "tmp"
+fi
+
+# Check if the "graphs" directory exists, create it if not
+if [[ ! -d "graphs" ]]; then
+    mkdir -p "graphs"
+fi
+
+
+
+# We store the name of the expected executable (defined in our makefile) 
+EXECUTABLE="prog"
+
+# Check if the executable file exists
+if [ ! -f "$EXECUTABLE" ]; then # if not, we start the compilation...
+    # Run the compilation using make
+    if ! make; then # if the output of make isn't 0, the compilation failed
+        echo "Error: Compilation failed. Please try again."
+        exit 9
+    fi
+    
+    # Check if the executable was generated after compilation
+    if [ ! -f "$EXECUTABLE" ]; then
+        echo "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
+        exit 10
+    fi
+fi
+
+
+# Now we start by checking everything about the arguments...
 # if -h is encountered in the options, regardless of its position, the help will be displayed 
+start_time="$(date+%s)"  # Plus we start the timer here... 
 for arg in "$@"; do
     if [ "$arg" == "-h" ]
     then
         help
+        execution_time="${execution_time:-0.0}"
+        echo "==========================TIMER=========================="
+        echo "          The prog ran ${execution_time} seconds."
+        echo "========================================================="
         exit 1
     fi
 done
@@ -107,6 +154,11 @@ if [ "$#" -lt 3 ]; # -lt = less than ; to check how many options there are
     then
     echo "Error : some options are missing."
     help
+    execution_time="${execution_time:-0.0}"
+    echo "==========================TIMER=========================="
+    echo "          The prog ran ${execution_time} seconds."
+    echo "========================================================="
+        
     exit 2
 fi
 
@@ -121,11 +173,21 @@ if [ ! -f "$file_path" ] // pas sure pour le check
     then 
     echo -e "Error : the file $file_path does not exist or the path is incorrect. \nPlease check its existence of the path to the file."
     help
+    execution_time="${execution_time:-0.0}"
+    echo "==========================TIMER=========================="
+    echo "          The prog ran ${execution_time} seconds."
+    echo "========================================================="
+        
     exit 3
 elif [ "$file_path" != *.csv ]
     then
     echo -e "Error : the file isn't a csv file. Please check and try again."
     help
+    execution_time="${execution_time:-0.0}"
+    echo "==========================TIMER=========================="
+    echo "          The prog ran ${execution_time} seconds."
+    echo "========================================================="
+        
     exit 4
 fi
 
@@ -166,6 +228,10 @@ then
     if [[ ! "$centrale_id" =~ ^[0-9]+$ ]]; then
         echo "Error : The centrale's id must be a whole number between 1 and 5."
         help
+        execution_time="${execution_time:-0.0}"
+        echo "==========================TIMER=========================="
+        echo "          The prog ran ${execution_time} seconds."
+        echo "========================================================="
         exit 9
     fi
 # if the id is below 1 or above 5 : error
@@ -173,6 +239,10 @@ then
         then
         echo "Error : The centrale's id must be between 1 and 5 (included)."
         help
+        execution_time="${execution_time:-0.0}"
+        echo "==========================TIMER=========================="
+        echo "          The prog ran ${execution_time} seconds."
+        echo "========================================================="
         exit 10
     fi
 fi
@@ -183,6 +253,10 @@ if [ "$type_station" == "hvb" && ( "$type_consommateur" == "all" || "$type_conso
 then
     echo "Error : the combinations 'hvb all' and 'hvb indiv' are prohibited."
     help
+    execution_time="${execution_time:-0.0}"
+    echo "==========================TIMER=========================="
+    echo "          The prog ran ${execution_time} seconds."
+    echo "========================================================="  
     exit 7
 fi
 
@@ -191,30 +265,12 @@ if [ "$type_station" == "hva" && ( "$type_consommateur" == "all" || "$type_conso
 then
     echo "Error : the combinations 'hva all' and 'hva indiv' are prohibited."
     help
+    execution_time="${execution_time:-0.0}"
+    echo "==========================TIMER=========================="
+    echo "          The prog ran ${execution_time} seconds."
+    echo "=========================================================" 
     exit 8
 fi
-
-
-
-# After checking everything related to the options, we start to get interested in the executable and the prog c... 
-# We store the name of the expected executable (defined in our makefile) 
-EXECUTABLE="prog"
-
-# Check if the executable file exists
-if [ ! -f "$EXECUTABLE" ]; then # if not, we start the compilation...
-    # Run the compilation using make
-    if ! make; then # if the output of make isn't 0, the compilation failed
-        echo "Error: Compilation failed. Please try again."
-        exit 9
-    fi
-    
-    # Check if the executable was generated after compilation
-    if [ ! -f "$EXECUTABLE" ]; then
-        echo "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
-        exit 10
-    fi
-fi
-
 
 
 # Replace all '-' with '0' in the file (we use a temporary file in /tmp to avoid overwriting the csv file)
