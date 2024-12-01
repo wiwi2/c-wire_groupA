@@ -67,7 +67,7 @@ mais avec id de centrale
 - pendant qu on calcul le temps : 0.0 pour tout ce qui est check des paramètres ..? 
     donc le start time il est avant la verif des parametres pour tout prendre..?
 - voir pour l extension du fichier ; on check le nom entier ou l extension suffit ?
-
+- est ce qu un id peut etre nul ? 
 
 
 
@@ -367,7 +367,10 @@ fi
 
 
 
-
+# Supposons que le fichier source est 'data.csv'
+# On filtre les lignes où l'ID de consommateur est non nul
+grep -v '^0;' data.csv > filtered_data.csv
+-> au lieu de faire un truc bizarre dans le int main pour les id des conso et des entreprises... voir ca
 
 
 -> dans le main faudra mettre des : ! 
