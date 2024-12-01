@@ -1,5 +1,7 @@
 // ici continuer les fonctions et ajouter des commentaires en anglais 
 
+demander au prof si cest grv si on utilise pas les min max version de left et right rotation..
+
 
 #include "structure.h"
 
@@ -73,14 +75,11 @@ max3(int id1, int id2, int id3){
 
 // function that do a simple left rotation in the tree to help us keep it equilibrated 
 AVL* LeftRotation(AVL* Tree){
-      if(Tree == NULL)
+      if(Tree == NULL){
         printf("AVL null... Please try again.");
         exit(2);
-
-      AVL* pivot; // we create a pivot that will help us do a rotation 
-      if(pivot == NULL)
-        printf("Error : creation of a pivot for a LeftRotation failed. Please try again")
-          exit(3); 
+      }
+      AVL* pivot; // we create a pivot that will help us do a rotation  
 
       int eq1; 
       int eq2; 
@@ -101,16 +100,12 @@ AVL* LeftRotation(AVL* Tree){
 
 
 AVL* RightRotation(AVL* Tree){ // à faire comme celle d'avant 
-      if(Tree == NULL)
+      if(Tree == NULL){
             printf("Error : AVL is NULL. Please try again.");
             exit(2); 
       }
 
-      AVL* pivot; // voir ici si je le crée ou je laisse comme ca... mais du coup la verif d'après n'a pas de sens..?
-      if(pivot == NULL)
-            printf("Error : pivot is null."); 
-            exit(3); 
-      }
+      AVL* pivot; 
 
       int eq1; 
       int eq2; 
