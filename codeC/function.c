@@ -209,12 +209,85 @@ AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso){
 
 
 
+
+
 // once the AVL is full and equilibrated, we'll sum up all the consumtions of energy
 // we'll do it with a recursive function for each node... 
 int sum_conso(AVL* Tree){
       if(Tree==NULL)
             printf("Error : AVL is NULL. Please try again.") 
             exit(.);
+
+
+
+
+
+
+
+A RE TRAVAILLER POUR AVOIR LES RIGHROTATION TOUT CA MAIS L ID EST LA : 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure AVL Node
+typedef struct Node {
+    int id;
+    int capacity;
+    int total_consumption;
+    struct Node *left;
+    struct Node *right;
+} Node;
+
+// Function to create a new node
+Node* createNode(int id, int capacity, int total_consumption) {
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    newNode->id = id;
+    newNode->capacity = capacity;
+    newNode->total_consumption = total_consumption;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// AVL insert function (by ID)
+Node* insertAVL(Node *root, int id, int capacity, int total_consumption) {
+    if (!root)
+        return createNode(id, capacity, total_consumption);
+
+    if (id < root->id)
+        root->left = insertAVL(root->left, id, capacity, total_consumption);
+    else if (id > root->id)
+        root->right = insertAVL(root->right, id, capacity, total_consumption);
+
+    return root; // No balancing for simplicity
+}
+
+// Postfix traversal to display and free nodes
+void displayAndFree(Node *root) {
+    if (root) {
+        displayAndFree(root->left);   // Process left child
+        displayAndFree(root->right);  // Process right child
+        // Print current node in "id;capacity;total_consumption" format
+        printf("%d;%d;%d\n", root->id, root->capacity, root->total_consumption);
+        free(root); // Free memory
+    }
+}
+
+int main() {
+    Node *root = NULL;
+    int id, capacity, consumption;
+
+    // Read data using scanf
+    while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
+        root = insertAVL(root, id, capacity, consumption);
+    }
+
+    // Display and free nodes in postfix order
+    displayAndFree(root);
+
+    return 0;
+}
+
+
 
 
 // voir si on commence par le bas ou par le haut 
