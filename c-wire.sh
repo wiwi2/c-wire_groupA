@@ -1,5 +1,3 @@
-
-
 #!/bin/bash
 
 # Description : this shell script will allow us to sort a csv file using program c 
@@ -10,13 +8,13 @@ help() {
     echo -e "\n\nHow to use: $0 <file_path> <type_station> <type_consumer> [centrale_id]"
     echo
     echo "The various options :"
-    echo "  file_path            : Path to the csv file (obligatory)" // ici voir comment lécrire
+    echo "  file_path            : Path to the csv file (obligatory)" 
     echo "  type_station         : Type of station to process. Possible values : hvb, hva, lv (obligatory)"
     echo "  type_consumer        : Type of consumer to process. Possible values : comp, indiv, all (obligatory)"
     echo "  centrale_id          : Id of the centrale (option) : between 1 and 5 included." // attention à ça 
     echo "  -h                   : Display this help."
     echo -e "\n \nMore explanations :"
-    echo "  hvb ; hva ; lv : are for a station (HV-B station, HV-A station, LV post)" // ici anglais à voir
+    echo "  hvb ; hva ; lv : are for a station (HV-B station, HV-A station, LV post)" 
     echo -e "\n  comp : to get companies' consumption of energy under the station selected. \n  indiv : to get individuals' consumption of energy under the station selected. \n  all : to get everyone's consumption of energy (individuals + companies) under the station selected.\n\n"
     echo -e "\nExample : $0 <file_path> -hvb -comp 2\n\n"
     echo "Warnings :"
@@ -27,7 +25,6 @@ help() {
     echo "If you use -h, regardless of other option(s), the help will be displayed."
 }
 
-
 # Check if the "tmp" directory exists
 if [[ -d "tmp" ]]; then
     # If it exists, we remove all files in "tmp" but keep the directory itself
@@ -36,6 +33,7 @@ else
     # If "tmp" doesn't exist, create it
     mkdir -p "tmp"
 fi
+
 
 # Check if the "graphs" directory exists, create it if not
 if [[ ! -d "graphs" ]]; then
@@ -65,15 +63,15 @@ fi
 
 # Now we start by checking everything about the arguments...
 # if -h is encountered in the options, regardless of its position, the help will be displayed 
-start_time="$(date +%s)"  # Plus we start the timer here... 
+start_time=$(date +%s)  # Plus we start the timer here... 
 for arg in "$@"; do
     if [ "$arg" == "-h" ]
     then
         help
         execution_time="${execution_time:-0.0}"
-        echo "==========================TIMER=========================="
+        echo "--------------------------TIMER--------------------------"
         echo "          The prog ran ${execution_time} seconds."
-        echo "========================================================="
+        echo "---------------------------------------------------------"
         exit 1
     fi
 done
@@ -84,9 +82,9 @@ if [ "$#" -lt 3 ]; # -lt = less than ; to check how many options there are
     echo "Error : some options are missing."
     help
     execution_time="${execution_time:-0.0}"
-    echo "==========================TIMER=========================="
-    echo "          The prog ran ${execution_time} seconds."
-    echo "========================================================="
+        echo "--------------------------TIMER--------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "---------------------------------------------------------"
         
     exit 2
 fi
@@ -98,14 +96,14 @@ type_consumer="$3"
 centrale_id="$4"
 
 # Checking the path/existence of the file and if it's a csv file
-if [ ! -f "$file_path" ] // pas sure pour le check 
+if [ ! -f "$1" ] ;
     then 
-    echo -e "Error : the file $file_path does not exist or the path is incorrect. \nPlease check its existence of the path to the file."
+    echo -e "Error : the file $1 does not exist or the path is incorrect. \nPlease check its existence of the path to the file."
     help
     execution_time="${execution_time:-0.0}"
-    echo "==========================TIMER=========================="
-    echo "          The prog ran ${execution_time} seconds."
-    echo "========================================================="
+        echo "--------------------------TIMER--------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "---------------------------------------------------------"
         
     exit 3
 elif [ "$file_path" != *.csv ]
@@ -113,28 +111,19 @@ elif [ "$file_path" != *.csv ]
     echo -e "Error : the file isn't a csv file. Please check and try again."
     help
     execution_time="${execution_time:-0.0}"
-    echo "==========================TIMER=========================="
-    echo "          The prog ran ${execution_time} seconds."
-    echo "========================================================="
+        echo "--------------------------TIMER--------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "---------------------------------------------------------"
         
     exit 4
 fi
-
-ICI VOIR SI JE DOIS CHECK L EXTENSION OU LE NOM COMPLET... JSP
-
-# Check if the file is a CSV and named 'DATA_CWIRE.csv'
-if [ "$file_path" != */DATA_CWIRE.csv ]; then
-    echo "Error: The file must be named 'DATA_CWIRE.csv'."
-    exit 4
-fi
-
 
 
 
 
 # Cheching the options : type of station, type of consumer, id of a centrale... 
 # Checking the type of station (-hvb or -hva or -lv) first :
-if [ "$type_station" != "hvb" && "$type_station" != "hva" && "$type_station" != "lv" ]; 
+if [[ "$type_station" != "hvb" && "$type_station" != "hva" && "$type_station" != "lv" ]]; 
 then
     echo "Error : the type of station '$type_station' is invalid. Possible values : hvb, hva, lv."
     help
@@ -143,76 +132,67 @@ fi
 
 
 # Checking the type of consumer :
-if [ "$type_consommateur" != "comp" && "$type_consommateur" != "indiv" && "$type_consommateur" != "all" ];  
+if [[ "$type_consumer" != "comp" && "$type_consumer" != "indiv" && "$type_consumer" != "all" ]];  
 then
-    echo "Error : the type of consumer '$type_consommateur' is invalid. Possible values : comp, indiv, all."
+    echo "Error : the type of consumer '$type_consumer' is invalid. Possible values : comp, indiv, all."
     help
     exit 6
 fi
 
 
 # Checking the existence of the option centrale_id (because it's optionnal); as we know there are just 5 centrales, we check it therefore :
-if [ ! -z "$centrale_id" ]; # if the argument exist (argument != void) // voir ici 
-then
+if [ ! -z "$centrale_id" ]; then  # if the argument exist (argument != void) // voir ici
     if [[ ! "$centrale_id" =~ ^[0-9]+$ ]]; then
-        echo "Error : The centrale's id must be a whole number between 1 and 5."
+        echo "Error: The centrale's id must be a whole number between 1 and 5."
         help
         execution_time="${execution_time:-0.0}"
-        echo "==========================TIMER=========================="
+        echo "--------------------------TIMER--------------------------"
         echo "          The prog ran ${execution_time} seconds."
-        echo "========================================================="
+        echo "---------------------------------------------------------"
         exit 9
     fi
 # if the id is below 1 or above 5 : error
-    elif [ "$centrale_id" -lt 1 ] || [ "$centrale_id" -gt 5 ]; 
-        then
-        echo "Error : The centrale's id must be between 1 and 5 (included)."
+    if [[ "$centrale_id" -lt 1 || "$centrale_id" -gt 5 ]]; then
+        echo "Error: The centrale's id must be between 1 and 5 (inclusive)."
         help
         execution_time="${execution_time:-0.0}"
-        echo "==========================TIMER=========================="
+        echo "--------------------------TIMER--------------------------"
         echo "          The prog ran ${execution_time} seconds."
-        echo "========================================================="
+        echo "---------------------------------------------------------"
         exit 10
     fi
 fi
 
+
+
 # Checking restrictions on certain parameter combinations (like hvb all)
 # With hvb station :
-if [ "$type_station" == "hvb" && ( "$type_consommateur" == "all" || "$type_consommateur" == "indiv" ) ]; 
+if [[ "$type_station" == "hvb" && ( "$type_consommateur" == "all" || "$type_consommateur" == "indiv" ) ]]; 
 then
     echo "Error : the combinations 'hvb all' and 'hvb indiv' are prohibited."
     help
     execution_time="${execution_time:-0.0}"
-    echo "==========================TIMER=========================="
-    echo "          The prog ran ${execution_time} seconds."
-    echo "========================================================="  
+        echo "--------------------------TIMER--------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "---------------------------------------------------------" 
     exit 7
 fi
 
 # With hva station 
-if [ "$type_station" == "hva" && ( "$type_consommateur" == "all" || "$type_consommateur" == "indiv" ) ]; 
+if [[ "$type_station" == "hva" && ( "$type_consommateur" == "all" || "$type_consommateur" == "indiv" ) ]]; 
 then
     echo "Error : the combinations 'hva all' and 'hva indiv' are prohibited."
     help
     execution_time="${execution_time:-0.0}"
-    echo "==========================TIMER=========================="
-    echo "          The prog ran ${execution_time} seconds."
-    echo "=========================================================" 
+        echo "--------------------------TIMER--------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "---------------------------------------------------------" 
     exit 8
 fi
 
 
 # Replace all '-' with '0' in the file (we use a temporary file in /tmp to avoid overwriting the csv file)
 tr '-' '0' < "$file_path" > /tmp/temp.csv && mv /tmp/temp.csv "$file_path"
-
-
-
-
-
-# voir mes notes ici
-
-
-
 
 
 
@@ -304,7 +284,16 @@ else
     # To finish, we remove the last column (the difference column) in lv_all_minmax.csv
     cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
 fi
+fi
 
+
+
+
+
+
+
+# Continuer avec les opérations sur les données (par exemple, traitement du fichier de données)
+# ./votre_programme $chemin_fichier_donnees $type_station $type_consommateur $identifiant_centrale
 
 
 
