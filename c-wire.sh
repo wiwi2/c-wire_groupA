@@ -1,75 +1,4 @@
 
-NOTES PERSO A NE PAS SUPPRIMER POUR L INSTANT ! 
-
-les parametres quon doit mettre ;
-chemin du fichier (obligatoire)
-type de station (hvb , hva , lv ) (obligatoire)
-type de conso (comp , indiv , all ) (obligatoire) 
-ATTENTION : pas de hvb all, hvb indiv, hva all, hva indiv
-identifiant de centrale (attention spécial)
-option daide help 
-
-
-à faire : (voir OU mettre ça) pour le temps 
-récup le temps dexecution en utilisant : 
-start_time = (date + %s) pour recup en secondes le temps 
-end_time = same
-puis : durée = end minus start 
-
-
--> g mis le start time... mtn faut mettre le end time bien sur...
-faire d abord partie c... il faut qu elle soit opperationnelle...
-ensuite penser à faire l option avec gnuplot... 
-
-
-comment envoyer entre programme c et le shell aller retour...  : cut .. < > 
-puis pour recupérer : ok normalement < > voir cut tout ca -> simple efficace
-
-
-normalement :  OK
-main : commence par help, 
-puis verifie les arguments 
-avant de passer au traitement 
-
-quand cest clair >> passer au traitement du fichier 
-cut ...
-programme c...
-
-programme c : main idea 
-on rentre on scanf 
-on traite avec avl 
-puis on printf 
-et on < > vers un fichier 
-
-ou placer le fichier ? : le placer avec / dans output si on veut ; ou encore nimporte ou on sen fout 
-tmp à vider a chaque fois ! (lire le projet)
-input dossier : pas besoin du coup 
-
-pas besoin de chmod cest le prof qui fait ca
-
-grep  a use pour les lv pour trier par ligne entre comp et indiv du coup 
-tr pour changer - en 0 pour faciliter le calcul des conso 
-
-
-dans tests : juste un test comme le projet l explique : un fichier texte quoi hva indiv ou autre 
-on nomera le truc < hva_indiv.txt par exemple 
-
-on fera trois cas du coup ? hva , hvb et lv 
-avec des sous cas ..? pour all indiv etc et des cut.. à voir
-
-
-
-QUESTIONS 
-- demander au prof par rapport au check du fichier csv ou de son nom...
-- demander pour lv all minmax... :si l option id centrale est presente est ce qu on doit faire dans tous les cas lv_all_minmax ? 
-mais avec id de centrale
-- et calcul : différence entre capacité et conso ? pour quantité absolue d NRJ..
-- pendant qu on calcul le temps : 0.0 pour tout ce qui est check des paramètres ..? 
-    donc le start time il est avant la verif des parametres pour tout prendre..?
-- voir pour l extension du fichier ; on check le nom entier ou l extension suffit ?
-- est ce qu un id peut etre nul ? 
-
-
 
 #!/bin/bash
 
@@ -279,12 +208,11 @@ tr '-' '0' < "$file_path" > /tmp/temp.csv && mv /tmp/temp.csv "$file_path"
 
 
 
-LE SORT : pour pouvoir trier la sortie du c en triant par capacité croissante...
-attention. faudra faire un grep par rapport au id qui vaut 0 si le prof me le confirme...:
-# Supposons que le fichier source est 'data.csv'
-# On filtre les lignes où l'ID de consommateur est non nul
-grep -v '^0;' data.csv > filtered_data.csv
--> au lieu de faire un truc bizarre dans le int main pour les id des conso et des entreprises... voir ca
+
+# voir mes notes ici
+
+
+
 
 
 
@@ -383,45 +311,9 @@ fi
 
 
 
--> dans le main faudra mettre des : ! ou pas... 
-    // faire des check dans le main... si id de hva ou hvb diff de 0 le prendre et le mettre dans l arbre... puis faire la somme...
-   // faudra faire en sorte dans le main que si le id de la company est différent de 0, alors on va prendre le load et lajouter...
 
 
 
-- attention pour lv all-> traitement supplémentaire // utilisation de head et tail ? voir peut etre à la place de sort ? 
-- traitement de base ok... 
-
-/!\
-- maisaussi : un fichier avec les 10 postes avec le plu de conso
-et les 10 avec le moins > fichier lv_all_minmax.csv
--> quantité absolue d énergie consommée en trop... attention ici...
-le tri se fera surement dans le shell.. (i guess) normalement cest bon mais à faire marcher...!!
-
-
-
--> plus tard ajouter en début de fichier les titres...
-
-->pas oublier que ca sera trié par capacité croissante...!
-
-
-
-
-
-
-
-
-
-ici sert pas normalement mais voir : (
-# We execute the program with the arguments passed to the script
-./"$EXECUTABLE" "$@" // on rentre dans le programme c du coup ici ... ? voir quoi faire après )
-
-
-
-
-
-# Continuer avec les opérations sur les données (par exemple, traitement du fichier de données)
-# ./votre_programme $chemin_fichier_donnees $type_station $type_consommateur $identifiant_centrale
 
 
 
