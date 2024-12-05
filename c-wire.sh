@@ -133,6 +133,7 @@ if [[ "$2" != "hvb" ]] && [[ "$2" != "hva" ]] && [[ "$2" != "lv" ]] && \
    [[ "$3" != "comp" ]] && [[ "$3" != "indiv" ]] && [[ "$3" != "all" ]]; then
     echo "Error: the type of station '$2' is invalid, as well as the type of consumer '$3'."
     help
+    execution_time="${execution_time:-0.0}"
     echo -e "\n--------------------------TIMER--------------------------"
     echo "          The prog ran ${execution_time} seconds."
     echo "---------------------------------------------------------"
@@ -145,6 +146,7 @@ if [[ "$2" != "hvb" ]] && [[ "$2" != "hva" ]] && [[ "$2" != "lv" ]];
 then
     echo "Error : the type of station '$2' is invalid. Possible values : hvb, hva, lv."
     help
+    execution_time="${execution_time:-0.0}"
     echo -e "\n--------------------------TIMER--------------------------"
     echo "          The prog ran ${execution_time} seconds."
     echo "---------------------------------------------------------"
@@ -157,6 +159,7 @@ if [[ "$3" != "comp" ]] && [[ "$3" != "indiv" ]] && [[ "$3" != "all" ]];
 then
     echo "Error : the type of consumer '$3' is invalid. Possible values : comp, indiv, all."
     help
+    execution_time="${execution_time:-0.0}"
     echo -e "\n--------------------------TIMER--------------------------"
     echo "          The prog ran ${execution_time} seconds."
     echo "---------------------------------------------------------"
@@ -219,6 +222,11 @@ fi
 tr '-' '0' < "$1" > /tmp/temp.csv && mv /tmp/temp.csv "$1"
 
 
+
+
+
+// ici switch case à faire, voir
+// partie qui ne fonctionne pas
 
 # cas hvb comp avec check que l'option centraleid existe ou non ... 
 if [[ "$2" == "hvb" ]] && [[ "$2" == "comp" ]]; then 
@@ -315,10 +323,8 @@ fi
 
 
 
-
 # Continuer avec les opérations sur les données (par exemple, traitement du fichier de données)
 # ./votre_programme $chemin_fichier_donnees $type_station $type_consommateur $identifiant_centrale
-
 
 
 
