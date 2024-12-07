@@ -286,14 +286,16 @@ case "$2" in
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
 
 
+# faire commentaires et commentaires sur partie verte et rouge à voir aussi 
+#partie verte : min ( capa, conso_totale ) 
+# partie rouge : max ( 0, conso - capa )
+
+
 
 if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
 
 # We copy the output of the case concerned and put its copy in tmp : we will need it to do the graph 
 cp "/output/lv_all_minmax.csv" "/tmp/lv_info_graph.csv"
-
-partie verte : min ( capa, conso_totale ) 
-partie rouge : max ( 0, conso - capa )
 
 # We will modify the file to help us build the graph 
 # Lire le fichier ligne par ligne et ajouter les nouvelles colonnes
@@ -341,15 +343,10 @@ set palette defined (0 "green", 1 "red")
 plot '/tmp/lv_info_graph.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
      '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
 
-
 # End of Gnuplot commands  
 EOF
 
-
-
-
-
-
+fi
 
 
 # End : we get the time...
