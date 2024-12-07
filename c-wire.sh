@@ -25,6 +25,20 @@ help() {
     echo -e "If you use -h, regardless of other parameter(s), the help will be displayed.\n"
 }
 
+# The execution time that will help us get the time of execution of the program 
+# For now, we set it to 0.0 until the current sort
+execution_time="${execution_time:-0.0}"
+
+
+# Function to display the timer using the execution time above 
+timer() {
+        echo -e "\n---------------------------------TIMER---------------------------------"
+        echo "          The prog ran ${execution_time} seconds."
+        echo "------------------------------------------------------------------"
+}
+
+
+
 # Check if the "tmp" directory exists
 if [[ -d "tmp" ]]; then
     # If it exists, we remove all files in "tmp" but keep the directory itself
@@ -68,16 +82,12 @@ fi
 
 # Now we start by checking everything about the arguments...
 # if -h is encountered in the options, regardless of its position, the help will be displayed 
-start_time=$(date +%s)  # Plus we start the timer here... 
 for arg in "$@"; do
     if [ "$arg" == "-h" ]
     then
     	echo -e "\nYou chose to display the help :\n"
         help
-        execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
+        timer
         exit 1
     fi
 done
@@ -87,11 +97,7 @@ if [ "$#" -lt 3 ]; # -lt = less than ; to check how many options there are
     then
     echo "Error : some options are missing."
     help
-    execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
-        
+    timer
     exit 2
 fi
 
@@ -106,21 +112,13 @@ if [ ! -f "$1" ] ;
     then 
     echo -e "Error : the file $1 does not exist or the path is incorrect. \nPlease check its existence of the path to the file."
     help
-    execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
-        
+    timer
     exit 3
 elif [ "$1" != *.csv ]
     then
     echo -e "Error : the file isn't a csv file. Please check and try again."
     help
-    execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
-        
+    timer
     exit 4
 fi
 
@@ -133,10 +131,7 @@ if [[ "$2" != "hvb" ]] && [[ "$2" != "hva" ]] && [[ "$2" != "lv" ]] && \
    [[ "$3" != "comp" ]] && [[ "$3" != "indiv" ]] && [[ "$3" != "all" ]]; then
     echo "Error: the type of station '$2' is invalid, as well as the type of consumer '$3'."
     help
-    execution_time="${execution_time:-0.0}"
-    echo -e "\n--------------------------TIMER--------------------------"
-    echo "          The prog ran ${execution_time} seconds."
-    echo "---------------------------------------------------------"
+    timer
     exit 5
 fi
 
@@ -146,10 +141,7 @@ if [[ "$2" != "hvb" ]] && [[ "$2" != "hva" ]] && [[ "$2" != "lv" ]];
 then
     echo "Error : the type of station '$2' is invalid. Possible values : hvb, hva, lv."
     help
-    execution_time="${execution_time:-0.0}"
-    echo -e "\n--------------------------TIMER--------------------------"
-    echo "          The prog ran ${execution_time} seconds."
-    echo "---------------------------------------------------------"
+    timer
     exit 5
 fi
 
@@ -159,10 +151,7 @@ if [[ "$3" != "comp" ]] && [[ "$3" != "indiv" ]] && [[ "$3" != "all" ]];
 then
     echo "Error : the type of consumer '$3' is invalid. Possible values : comp, indiv, all."
     help
-    execution_time="${execution_time:-0.0}"
-    echo -e "\n--------------------------TIMER--------------------------"
-    echo "          The prog ran ${execution_time} seconds."
-    echo "---------------------------------------------------------"
+    timer
     exit 6
 fi
 
@@ -172,20 +161,14 @@ if [ ! -z "$4" ]; then  # if the argument exist (argument != void) // voir ici
     if [[ ! "$4" =~ ^[0-9]+$ ]]; then
         echo "Error: The centrale's id must be a whole number between 1 and 5."
         help
-        execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
+        timer
         exit 9
     fi
 # if the id is below 1 or above 5 : error
     if [[ "$4" -lt 1 || "$4" -gt 5 ]]; then
         echo "Error: The centrale's id must be between 1 and 5 (inclusive)."
         help
-        execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------"
+        timer
         exit 10
     fi
 fi
@@ -198,10 +181,7 @@ if [[ "$2" == "hvb" ]] && ( [[ "$3" == "all" ]] || [[ "$3" == "indiv" ]] );
 then
     echo "Error : the combinations 'hvb all' and 'hvb indiv' are prohibited."
     help
-    execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------" 
+    timer
     exit 7
 fi
 
@@ -210,125 +190,100 @@ if [[ "$2" == "hva" ]] && ( [[ "$3" == "all" ]] || [[ "$3" == "indiv" ]] );
 then
     echo "Error : the combinations 'hva all' and 'hva indiv' are prohibited."
     help
-    execution_time="${execution_time:-0.0}"
-        echo -e "\n--------------------------TIMER--------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "---------------------------------------------------------" 
+    timer
     exit 8
 fi
+
+
+# We just finished checking evertything about the parameters, so we start getting the time here...
+start_time=$(date +%s)  
+
 
 
 # Replace all '-' with '0' in the file (we use a temporary file in /tmp to avoid overwriting the csv file)
 tr '-' '0' < "$1" > /tmp/temp.csv && mv /tmp/temp.csv "$1"
 
 
-
-
-
-// ici switch case à faire, voir
-// partie qui ne fonctionne pas
-
-# cas hvb comp avec check que l'option centraleid existe ou non ... 
-if [[ "$2" == "hvb" ]] && [[ "$2" == "comp" ]]; then 
-    if [ ! -z "$4" ]; then
+# switch case for all possibles cases : hvb comp, hvb comp $centrale, lv all, ...
+case "$2" in
+  "hvb")
+    case "$3" in
+      "comp")
+        if [[ ! -z "$4" ]]; then
           cut -d ';' -f 1,2,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_comp_${4}.csv"
-    fi
-    else
-         cut -d ';' -f 2,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_comp.csv"
-    fi
-fi
+        else
+          cut -d ';' -f 2,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_comp.csv"
+        fi
+        ;;
+      "indiv")
+        if [[ ! -z "$4" ]]; then
+          cut -d ';' -f 1,2,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_indiv_${4}.csv"
+        else
+          cut -d ';' -f 2,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_indiv.csv"
+        fi
+        ;;
+    esac
+    ;;
 
-# cas hvb indiv avec check que l'option centraleid existe ou non ...
-if [[ "$2" == "hvb" ]] && [[ "$3" == "indiv" ]]; then 
-    if [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,2,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_indiv_${4}.csv"
-    fi
-else
-    cut -d ';' -f 2,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hvb_indiv.csv"
-fi
+  "hva")
+    case "$3" in
+      "comp")
+        if [[ ! -z "$4" ]]; then
+          cut -d ';' -f 1,3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_comp_${4}.csv"
+        else
+          cut -d ';' -f 3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_comp.csv"
+        fi
+        ;;
+      "indiv")
+        if [[ ! -z "$4" ]]; then
+          cut -d ';' -f 1,3,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_indiv_${4}.csv"
+        else
+          cut -d ';' -f 3,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_indiv.csv"
+        fi
+        ;;
+    esac
+    ;;
 
+ "all")
+ # First, if a centrale has been added by the user :
+  if [[ ! -z "$4" ]]; then
+    cut -d ';' -f 1,4-8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_all_${4}.csv"
 
-# cas hva comp avec check que l'option centraleid existe ou non ... 
-if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then 
-    if  [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_comp_${4}.csv"
-    fi
-    else
-         cut -d ';' -f 3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_comp.csv"
-    fi
-fi
+    # Extraction of the 10 stations with the lowest consumption
+    cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | head -n 10 | \
+      awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
 
-# cas hva indiv avec check que l'option centraleid existe ou non ...
-if [[ "$2" == "hva" ]] && [[ "$3" == "indiv" ]]; then 
-   if  [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,3,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_indiv_${4}.csv"
-   fi
-   else
-        cut -d ';' -f 3,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/hva_indiv.csv"
-   fi
-fi
+    # Extraction of the 10 positions with the highest consumption
+    cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | tail -n 10 | \
+      awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
 
-# cas lv indiv avec check de l'option centraleid existe ou non ... ! attention 3 cas ou lv (comp, indiv, all ! + traitement supp pour all) 
-if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then 
-    if  [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,4,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_comp_${4}.csv"
-    fi
-    else
-        cut -d ';' -f 4,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_comp.csv"
-    fi
-fi
+    # Deleting the difference column (4th column) that helped us to sort out by consumtion...
+    cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && \
+      mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
 
-# cas lv comp
-if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then 
-    if  [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,4,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_indiv_${4}.csv"
-    fi
-    else
-        cut -d ';' -f 4,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_indiv.csv"
-    fi
-fi
-
-
-# Case for lv all
-if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
-    if  [[ ! -z "$4" ]]; then
-        cut -d ';' -f 1,4-8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_all_${4}.csv"
-
-        # Extract and sort the 10 posts with the lowest consumption, then process line by line
-        cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | head -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
-
-        # Extract and sort the 10 posts with the highest consumption, then process line by line
-        cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | tail -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
-
-        # Remove the last column (the difference column) in lv_all_minmax.csv
-        cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
-
-    fi
-else
+# Now, if $4 is "empty" :
+  else
     cut -d ';' -f 4-8 "$1" | ./prog | sort -t ';' -k2 -n > "/output/lv_all.csv"
 
-    # Extract and sort the 10 posts with the lowest consumption, then process line by line
-    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
+    # Same as before, extraction of the 10 stations with the lowest consumption
+    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | \
+      awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr > "/output/lv_all_minmax.csv"
 
-    # Extract and sort the 10 posts with the highest consumption, then process line by line
-    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | awk -F';' '{print $1, $2, $3, $2 - $3}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+    # Extraction of the 10 positions with the highest consumption
+    cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | \
+      awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
 
-    # To finish, we remove the last column (the difference column) in lv_all_minmax.csv
-    cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
-fi
-fi
+    # Deleting the difference column (4th column) that helped us to sort out by consumtion...
+    cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && \
+      mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
+  fi
+  ;;
 
-
-
-
-
-
-# Continuer avec les opérations sur les données (par exemple, traitement du fichier de données)
-# ./votre_programme $chemin_fichier_donnees $type_station $type_consommateur $identifiant_centrale
-
-
-
-
+  
+# End : we get the time...
+end_time=$(date +%s)
+execution_time=$((end_time-start_time)) 
+timer 
 
 
 
