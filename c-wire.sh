@@ -282,11 +282,83 @@ case "$2" in
   fi
   ;;
 
-  
+
+# ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
+
+
+
+if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
+
+# We copy the output of the case concerned and put its copy in tmp : we will need it to do the graph 
+cp "/output/lv_all_minmax.csv" "/tmp/lv_info_graph.csv"
+
+partie verte : min ( capa, conso_totale ) 
+partie rouge : max ( 0, conso - capa )
+
+# We will modify the file to help us build the graph 
+# Lire le fichier ligne par ligne et ajouter les nouvelles colonnes
+while IFS=';' read -r id capa conso_totale; do
+    # Ignorer la ligne d'en-tête
+    if [ "$id" != "id" ]; then
+        # Calcul de la partie verte (c'est la consommation qui ne dépasse pas la capacité)
+    if (( conso_totale <= capa )); then
+            partie_verte=$conso_totale
+            partie_rouge=0
+        else
+            # La partie rouge est la différence entre la consommation et la capacité
+            partie_verte=$capa
+            partie_rouge=$(echo "$conso_totale - $capa" | bc -l)
+        fi
+
+        # Ajouter la ligne modifiée dans le fichier de sortie en écrasant le contenu existant (on sait jamais)
+        echo "$id;$capa;$conso_totale;$partie_verte;$partie_rouge" > "/tmp/lv_info_graph_with_parts.csv"
+    fi
+done < "/tmp/lv_info_graph.csv"
+
+
+# Gnuplot starting command
+gnuplot << EOF 
+
+# We set the output terminal to PNG with a specific size
+set terminal png size 1024,768
+set output '/output/lv_all_minmax_graph.png'
+
+# Set the title of the graph and the titles for the axes (X and Y)
+set title "Load of the 10 most and least loaded LV stations"
+set xlabel "LV Stations"
+set ylabel "Load (kWh)"
+
+# Set the bar chart style, with a gap between clusters of bars
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid border -1
+set boxwidth 0.9
+
+# We define the color palette (green for capacity and red for overload)
+set palette defined (0 "green", 1 "red")
+
+# We enter the data from the file with all the UTILE informations to draw the histogram 
+plot '/tmp/lv_info_graph.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
+     '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
+
+
+# End of Gnuplot commands  
+EOF
+
+
+
+
+
+
+
+
 # End : we get the time...
 end_time=$(date +%s)
 execution_time=$((end_time-start_time)) 
 timer 
+
+
+
 
 
 
