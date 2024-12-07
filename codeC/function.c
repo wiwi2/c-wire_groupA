@@ -1,6 +1,4 @@
-// ici continuer les fonctions et ajouter des commentaires en anglais 
-
-demander au prof si cest grv si on utilise pas les min max version de left et right rotation..
+// add more comments in english... 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,7 +68,6 @@ max3(int id1, int id2, int id3){
       }
 }
 
-// ajouter des commentaires pour les rotations pour mieux comprendre aussi !!
 
 // function that do a simple left rotation in the tree to help us keep it equilibrated 
 AVL* LeftRotation(AVL* Tree){
@@ -169,6 +166,7 @@ AVL* equilibrageAVL(AVL* Tree){
       return Tree; 
 }
 
+
 // function to insert new nodes in the AVL and returns the updated AVL 
 AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
     AVL* New = createNodeAVL(id, capacity, conso);
@@ -209,6 +207,7 @@ AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
     return Tree;
 }
 
+
 // Postfix traversal to display and free nodes
 void displayAndFree(Node *root) {
     if (root) {
@@ -220,13 +219,14 @@ void displayAndFree(Node *root) {
     }
 }
 
+
 int main() {
     Node *root = NULL;
     int id, capacity, consumption;
 
-    // Read data using scanf
+    // Read data using scanf and insert in the AVL
     while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
-        root = insertAVL(root, id, capacity, consumption);
+        root = insertAVL(root, id, capacity, consumption); 
     }
       
     // Display and free nodes in postfix order
