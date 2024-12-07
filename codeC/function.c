@@ -2,7 +2,8 @@
 
 demander au prof si cest grv si on utilise pas les min max version de left et right rotation..
 
-
+#include <stdio.h>
+#include <stdlib.h>
 #include "structure.h"
 
 AVL* createNodeAVL(int id, int capacity, int conso){
@@ -21,8 +22,6 @@ AVL* createNodeAVL(int id, int capacity, int conso){
 return New;
 }
 
-
-// needed HERE : function max and min (to equilibrate the tree !! (à comprendre aussi)
 // max2 : finds the max between two values 
 max2(int id1, int id2){
       if(id1 > id2){
@@ -88,11 +87,11 @@ AVL* LeftRotation(AVL* Tree){
       Tree->pRight = pivot->pLeft; 
       pivot->pLeft = Tree; 
 
-      eq1 = Tree->eq; 
-      eq2 = pivot->eq; 
+      eq_a = Tree->eq; 
+      eq_p = pivot->eq; 
   
-      Tree->eq  = eq1 - max2(eq2,0) - 1; 
-      pivot->eq = min3(eq1 - 2, eq1 + eq2 - 2, eq1 - 1); 
+      Tree->eq  = eq_a - max2(eq_p,0) - 1; 
+      pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_a - 1); 
       Tree      = pivot; 
 
       return Tree;
@@ -107,18 +106,18 @@ AVL* RightRotation(AVL* Tree){ // à faire comme celle d'avant
 
       AVL* pivot; 
 
-      int eq1; 
-      int eq2; 
+      int eq_a; 
+      int eq_p; 
 
       pivot         = Tree->pLeft;
       Tree->pleft   = pivot->pRight; 
       pivot->pRight = Tree; 
 
-      eq1       = Tree->eq;
-      eq2       = pivot->eq; 
+      eq_a       = Tree->eq;
+      eq_p       = pivot->eq; 
 
-      Tree->eq  = eq1 - min2(eq2, 0) + 1; 
-      pivot->eq = max3(eq1 + 2, eq1 + eq2 + 2, eq2 + 1); 
+      Tree->eq  = eq_a - min2(eq_p, 0) + 1; 
+      pivot->eq = max3(eq_a + 2, eq_a + eq_p + 2, eq_p + 1); 
       Tree      = pivot; 
 
       return Tree; 
@@ -151,7 +150,7 @@ AVL* equilibrageAVL(AVL* Tree){
             printf("Error : AVL is NULL. Please try again."); 
             exit(..); 
       }
-      if(Tree->eq > 1){
+      if(Tree->eq >= 2){
             if(Tree->pRight->eq >=0){
                   return leftRotation(Tree)
             }
@@ -159,7 +158,7 @@ AVL* equilibrageAVL(AVL* Tree){
                   return DoubleLeftRotation(Tree); 
                   }
 }
-      else if(Tree->eq < -1){
+      else if(Tree->eq <= -2){
             if(Tree->pLeft->eq <= 0){
                   return RightRotation(Tree)
             }
@@ -170,95 +169,44 @@ AVL* equilibrageAVL(AVL* Tree){
       return Tree; 
 }
 
-// function to insert new nodes in the AVL and returns the updated AVL
-AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso){
+// function to insert new nodes in the AVL and returns the updated AVL 
+AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
+    AVL* New = createNodeAVL(id, capacity, conso);
+    if (New == NULL) {
+        printf("The malloc of the new AVL node failed. Please try again.");
+        exit(1);
+    }
 
-      AVL* New = createNodeAVL(id, capacity, conso); 
-      if(New == NULL){
-            printf("The malloc of the new AVL node failed. Please try again."); 
-            exit(); 
-      }
-      if(Tree == NULL){
-            *h = 1; 
-            return New; 
-      }
-      else if(New->id <= Tree->id){ // regarder pour le = si il est nécéssaire et comprendre les h...
-            Tree->pLeft = insertAVL(Tree->pLeft, h, id, capacity, conso); 
-            *h = -(*h); 
-      }
-      else if(New->id > Tree->id){
-            Tree->pLeft = insertAVL(Tree->pRight, h, id, capacity, conso); 
-      }
-      else{
-            h=0; 
-            return Tree; 
-      }
-      if(h != 0){
-            Tree->eq = Tree->eq + *h; 
-            Tree = equilibrageAVL(Tree); 
-      }
-            if(Tree->eq == 0){
-                  *h = 0; 
-            }
-            else{
-                  *h = 1; 
-            }
+    if (Tree == NULL) {
+        *h = 1;
+        return New;
+    }
 
-      return Tree; 
-}
+    if (id < Tree->id) {
+        Tree->pLeft = insertAVL(Tree->pLeft, h, id, capacity, conso);
+        *h = -(*h);
+    } else if (id > Tree->id) {
+        Tree->pRight = insertAVL(Tree->pRight, h, id, capacity, conso);
+    } else {
+        // if the same node is found, we add the consumption together here !
+        Tree->conso += conso;
+        *h = 0;  // nothing change in the structure
+        return Tree;
+    }
 
+    // Balance factor update here
+    if (*h != 0) {
+        Tree->eq = Tree->eq + *h;
+        Tree = equilibrageAVL(Tree);
 
+        if (Tree->eq == 0) {
+            *h = 0;
+        } else {
+            *h = 1;
+        }
+    }
 
-
-
-// once the AVL is full and equilibrated, we'll sum up all the consumtions of energy
-// we'll do it with a recursive function for each node... 
-int sum_conso(AVL* Tree){
-      if(Tree==NULL)
-            printf("Error : AVL is NULL. Please try again.") 
-            exit(.);
-
-
-
-
-
-
-
-A RE TRAVAILLER POUR AVOIR LES RIGHROTATION TOUT CA MAIS L ID EST LA : 
-
-#include <stdio.h>
-#include <stdlib.h>
-
-// Structure AVL Node
-typedef struct Node {
-    int id;
-    int capacity;
-    int total_consumption;
-    struct Node *left;
-    struct Node *right;
-} Node;
-
-// Function to create a new node
-Node* createNode(int id, int capacity, int total_consumption) {
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->id = id;
-    newNode->capacity = capacity;
-    newNode->total_consumption = total_consumption;
-    newNode->left = newNode->right = NULL;
-    return newNode;
-}
-
-// AVL insert function (by ID)
-Node* insertAVL(Node *root, int id, int capacity, int total_consumption) {
-    if (!root)
-        return createNode(id, capacity, total_consumption);
-
-    if (id < root->id)
-        root->left = insertAVL(root->left, id, capacity, total_consumption);
-    else if (id > root->id)
-        root->right = insertAVL(root->right, id, capacity, total_consumption);
-
-    return root; // No balancing for simplicity
+    return Tree;
 }
 
 // Postfix traversal to display and free nodes
@@ -268,7 +216,7 @@ void displayAndFree(Node *root) {
         displayAndFree(root->right);  // Process right child
         // Print current node in "id;capacity;total_consumption" format
         printf("%d;%d;%d\n", root->id, root->capacity, root->total_consumption);
-        free(root); // Free memory
+        free(root); // Free memory from children to parents... 
     }
 }
 
@@ -280,7 +228,7 @@ int main() {
     while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
         root = insertAVL(root, id, capacity, consumption);
     }
-
+      
     // Display and free nodes in postfix order
     displayAndFree(root);
 
@@ -289,13 +237,7 @@ int main() {
 
 
 
-
-// voir si on commence par le bas ou par le haut 
-// adapter la suppression des noeuds en fonction de ce choix...
-
-void postfixDisplay // voir ou mettre ca : il faut lire les enfants lors de la somme de conso et les supprimer peu à peu 
-// en tout cas c'est l'idée... à voir 
-// jsp pour cette fonction. On en a pas trop besoin finalement 
+ 
 
 
 
