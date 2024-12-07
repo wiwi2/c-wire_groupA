@@ -21,6 +21,7 @@ help() {
     echo "1) The following combination of parameters are prohibited and will generate an error : "
     echo "     hvb all ; hvb indiv ; hva all ; hva indiv"
     echo "2) Be sure that your file exists !"
+    echo "3) Of course, be sure the compilation works..."
     echo
     echo -e "If you use -h, regardless of other parameter(s), the help will be displayed.\n"
 }
@@ -69,12 +70,14 @@ if [ ! -f "$EXECUTABLE" ]; then # if not, we start the compilation...
     # Run the compilation using make
     if ! make; then # if the output of make isn't 0, the compilation failed
         echo "Error: Compilation failed. Please try again."
+        timer
         exit 9
     fi
     
     # Check if the executable was generated after compilation
     if [ ! -f "$EXECUTABLE" ]; then
         echo "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
+        timer
         exit 10
     fi
 fi
