@@ -290,6 +290,11 @@ case "$2" in
 #partie verte : min ( capa, conso_totale ) 
 # partie rouge : max ( 0, conso - capa )
 
+# check à faire niveau quand je copie tout ca
+
+# à faire : trier les exit ; ajouter les titres au début des fichiers de sorties !!
+
+
 
 
 if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
