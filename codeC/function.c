@@ -122,23 +122,26 @@ AVL* RightRotation(AVL* Tree){ // à faire comme celle d'avant
 
 
 // Double left rotation : to equilibrate the AVL Tree that we'll use to sum the consomations...
-AVL* DoubleLeftRotation(AVL* Tree)
+AVL* DoubleLeftRotation(AVL* Tree){
       if(Tree == NULL)
             printf("Error : AVL is NULL. Please try again."); 
             exit(..); 
 
       Tree->pRight = RightRotation(Tree->pRight); 
       return LeftRotation(Tree); 
+}
 
 
 // Double right rotation
-AVL* DoubleRightRotation(AVL* Tree)
+AVL* DoubleRightRotation(AVL* Tree){
       if(Tree == NULL) 
             printf("Error : AVL is NULL. Please try again."); 
             exit(..); 
 
       Tree->pLeft = LeftRotation((Tree->pLeft); 
       return RightRotation(Tree); 
+}
+
 
 
 // Function to know what rotation is suitable to the situation of the AVL Tree 
@@ -209,13 +212,13 @@ AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
 
 
 // Postfix traversal to display and free nodes
-void displayAndFree(Node *root) {
-    if (root) {
-        displayAndFree(root->left);   // Process left child
-        displayAndFree(root->right);  // Process right child
+void displayAndFree(AVL* tree) {
+    if (tree != NULL) {
+        displayAndFree(tree->pleft);   // Process left child
+        displayAndFree(tree->pRight);  // Process right child
         // Print current node in "id;capacity;total_consumption" format
-        printf("%d;%d;%d\n", root->id, root->capacity, root->total_consumption);
-        free(root); // Free memory from children to parents... 
+        printf("%d:%d:%d\n", tree->id, tree->capacity, tree->total_consumption);
+        free(tree); // Free memory from children to parents... 
     }
 }
 
