@@ -17,3 +17,4 @@ sur le sujet du proje ya ecrit =
 doit contenir les instructions pour compiler et pour utiliser notre "application"
 un document PDF presentant la repartition des taches au sein du groupe, le planning de realisation, limites fonctionelles du notre appli(liste de ce qui n'est pas implementée et/ou de ce qui est implémente mais qui ne fonctionne pas correctement ou totalement)
 
+pitié comment faut ajouter le pdf ?? 
