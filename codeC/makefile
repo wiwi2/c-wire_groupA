@@ -1,50 +1,45 @@
-# taper 'make' pour executer tout le programme
-# taper 'make clean' pour nettoyer les fichiers générés
-# taper 'make re' pour nettoyer et recompiler
+# ----------------------- MAKEFILE -----------------------
 
 
-// à switch en anglais 
-
-
-# Nom de l'exécutable final
+# Name of the final executable
 EXEC = prog
 
-# Liste des fichiers sources
+# List of source files
 SRCS = main.c function.c
 
-# Répertoire pour les fichiers objets
+# We define the directory for object files
 OBJ_DIR = tmp
 
-# Liste des fichiers objets générés à partir des sources
+# List of object files generated from sources
 OBJS = $(SRCS:.c=.o)
 
-# Fichiers objets avec le chemin vers le répertoire tmp
+# Object files with path to tmp directory
 OBJ_TMP = $(addprefix $(OBJ_DIR)/, $(notdir $(OBJS)))
 
-# Options de compilation
+# Compile options
 CFLAGS = -Wall -Wextra -Werror -g
 
-# Compilation avec GCC
+# Compilation with GCC
 CC = gcc
 
-# Première cible par défaut (compilation du projet)
+# First default target (project compilation)
 all: $(EXEC)
 
-# Règle pour créer l'exécutable
+# Rule to create the executable
 $(EXEC): $(OBJ_TMP)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Règle générique pour compiler les fichiers objets dans tmp/
+# Generic rule for compiling object files in the directory tmp/
 $(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(OBJ_DIR)  # Crée le répertoire tmp s'il n'existe pas
+	@mkdir -p $(OBJ_DIR)  # Create the tmp directory if it does not exist
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyage des fichiers générés
+# Cleaning generated files
 clean:
 	rm -rf $(OBJ_DIR) $(EXEC)
 
-# Cible pour nettoyer et recompiler le projet
+# Target to clean and recompile the project
 re: clean all
 
-# Indication pour ignorer les erreurs de fichiers inexistants
+# Indication to ignore non-existent file errors
 .PHONY: all clean re
