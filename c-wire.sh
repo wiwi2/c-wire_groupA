@@ -314,6 +314,9 @@ esac
 
 # à faire : trier les exit ; -> fil perdu à un moment encore...
 
+# ne pas oublier de test le machin pour voir si les free sont bien fait... 
+# check tout le doc pour verif que rien n a été oublié !!! 
+
 
 
 if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
