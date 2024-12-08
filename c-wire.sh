@@ -305,14 +305,14 @@ esac
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
 
 
-# faire commentaires et commentaires sur partie verte et rouge à voir aussi 
+# faire commentaires (attention plein de commentaires francais qui trainent)
+
+# et commentaires sur partie verte et rouge à voir aussi :
 #partie verte : min ( capa, conso_totale ) 
 # partie rouge : max ( 0, conso - capa )
 
-# check à faire niveau quand je copie tout ca
 
-# à faire : trier les exit ; ajouter les titres au début des fichiers de sorties !!
-
+# à faire : trier les exit ; -> fil perdu à un moment encore...
 
 
 
