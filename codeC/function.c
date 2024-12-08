@@ -56,7 +56,7 @@ min2(int id1, int id2){
 
 
 // min3 : finds the min between three values 
-max3(int id1, int id2, int id3){
+min3(int id1, int id2, int id3){
       if(id1 < id2 && id1 < id3){
             return id1; 
       }
