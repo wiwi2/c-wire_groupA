@@ -305,7 +305,7 @@ esac
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
 
 
-# faire commentaires (attention plein de commentaires francais qui trainent)
+# faire commentaires (attention plein de commentaires francais qui trainent) / ne pas oublier le c ; add des commentaires 
 
 # et commentaires sur partie verte et rouge à voir aussi :
 #partie verte : min ( capa, conso_totale ) 
