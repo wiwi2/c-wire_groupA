@@ -21,7 +21,7 @@ return New;
 }
 
 // max2 : finds the max between two values 
-max2(int id1, int id2){
+int max2(int id1, int id2){
       if(id1 > id2){
             return id1; 
       }
@@ -31,7 +31,7 @@ max2(int id1, int id2){
 }
 
 // max3 : finds the max between three values 
-max3(int id1, int id2, int id3){
+int max3(int id1, int id2, int id3){
       if(id1 > id2 && id1 > id3){
             return id1; 
       }
@@ -45,7 +45,7 @@ max3(int id1, int id2, int id3){
 
 
 // min2 : finds the min between two values 
-min2(int id1, int id2){
+int min2(int id1, int id2){
       if(id1 < id2){
             return id1; 
       }
@@ -56,7 +56,7 @@ min2(int id1, int id2){
 
 
 // min3 : finds the min between three values 
-min3(int id1, int id2, int id3){
+int min3(int id1, int id2, int id3){
       if(id1 < id2 && id1 < id3){
             return id1; 
       }
@@ -171,7 +171,7 @@ AVL* equilibrageAVL(AVL* Tree){
 
 
 // function to insert new nodes in the AVL and returns the updated AVL 
-AVL insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
+AVL* insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
     AVL* New = createNodeAVL(id, capacity, conso);
     if (New == NULL) {
         printf("The malloc of the new AVL node failed. Please try again.");
