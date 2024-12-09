@@ -76,16 +76,12 @@ AVL* LeftRotation(AVL* Tree){
         exit(2);
       }
       AVL* pivot; // we create a pivot that will help us do a rotation  
-
-      int eq1; 
-      int eq2; 
+      int eq_a = Tree->eq; 
+      int eq_p = pivot->eq; 
 
       pivot        = Tree->pRight; 
       Tree->pRight = pivot->pLeft; 
       pivot->pLeft = Tree; 
-
-      eq_a = Tree->eq; 
-      eq_p = pivot->eq; 
   
       Tree->eq  = eq_a - max2(eq_p,0) - 1; 
       pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_a - 1); 
@@ -103,15 +99,12 @@ AVL* RightRotation(AVL* Tree){ // à faire comme celle d'avant
 
       AVL* pivot; 
 
-      int eq_a; 
-      int eq_p; 
+      int eq_a = Tree->eq;
+      int eq_p = pivot->eq;
 
       pivot         = Tree->pLeft;
       Tree->pleft   = pivot->pRight; 
       pivot->pRight = Tree; 
-
-      eq_a       = Tree->eq;
-      eq_p       = pivot->eq; 
 
       Tree->eq  = eq_a - min2(eq_p, 0) + 1; 
       pivot->eq = max3(eq_a + 2, eq_a + eq_p + 2, eq_p + 1); 
@@ -152,7 +145,7 @@ AVL* equilibrageAVL(AVL* Tree){
       }
       if(Tree->eq >= 2){
             if(Tree->pRight->eq >=0){
-                  return leftRotation(Tree)
+                  return LeftRotation(Tree)
             }
            else{
                   return DoubleLeftRotation(Tree); 
