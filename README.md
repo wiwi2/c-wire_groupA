@@ -27,3 +27,4 @@ un document PDF presentant la repartition des taches au sein du groupe, le plann
 pitié comment faut ajouter le pdf ?? 
 finalement faut l'ajouter a cote du read me, pas dedans
 
+reste des notes voir sur mon ipad dans les notes + ordi + l'ipad de wiame
