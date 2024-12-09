@@ -70,7 +70,7 @@ int min3(int id1, int id2, int id3){
 }
 
 
-// function that do a simple left rotation in the tree to help us keep it equilibrated 
+// function that do a simple left rotation in the tree to help us keep it balanced 
 AVL* LeftRotation(AVL* Tree){
       if(Tree == NULL){
         printf("AVL null... Please try again.");
@@ -91,7 +91,7 @@ AVL* LeftRotation(AVL* Tree){
       return Tree;
 }
 
-// function that do a simple right rotation in the tree to help us keep it equilibrated 
+// function that do a simple right rotation in the tree to help us keep it balanced
 AVL* RightRotation(AVL* Tree){ 
       if(Tree == NULL){
             printf("Error : AVL is NULL. Please try again.");
@@ -196,7 +196,7 @@ AVL* insertAVL(AVL* Tree, int* h, int id, int capacity, int conso) {
         Tree = balancingAVL(Tree);
 
         if (Tree->eq == 0) { // if tree is balance again...
-            *h = 0; // his ancestors doo not changes
+            *h = 0; // his ancestors do not changes
         } else {
             *h = 1;
         }
