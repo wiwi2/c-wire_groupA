@@ -68,7 +68,7 @@ fi
 EXECUTABLE="prog"
 
 # Check if the executable file exists
-if [ ! -f "$EXECUTABLE" ]; then # if not, we start the compilation...
+if ! [ -f "$EXECUTABLE" ]; then # if not, we start the compilation...
     # Run the compilation using make
     if ! make; then # if the output of make isn't 0, the compilation failed
         echo "Error: Compilation failed. Please try again."
@@ -385,6 +385,8 @@ fi
 end_time=$(date +%s)
 execution_time=$((end_time-start_time)) 
 timer 
+
+
 
 
 
