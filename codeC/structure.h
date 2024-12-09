@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 
 /* Structure AVL : stores the id of the station, its capacity (to transfer energy), the sum of 
 consommation of its consummers, plus its child and the value to keep the AVL equilibrated... */ 
@@ -12,3 +11,5 @@ typedef struct _AVL{
     struct _AVL* pLeft; 
     struct _AVL* pRight; 
 } AVL; 
+
+#endif
