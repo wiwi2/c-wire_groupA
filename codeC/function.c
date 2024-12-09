@@ -96,7 +96,7 @@ AVL* LeftRotation(AVL* Tree){
 }
 
 //function that do a simple right rotation in the tree to help us keep it equilibrated
-AVL* RightRotation(AVL* Tree){ // à faire comme celle d'avant 
+AVL* RightRotation(AVL* Tree){ 
       if(Tree == NULL){
             printf("Error : AVL is NULL. Please try again.");
             exit(2); 
