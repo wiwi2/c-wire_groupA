@@ -33,10 +33,12 @@ execution_time="${execution_time:-0.0}"
 
 # Function to display the timer using the execution time above 
 timer() {
-        echo -e "\n---------------------------------TIMER---------------------------------"
-        echo "          The prog ran ${execution_time} seconds."
-        echo "------------------------------------------------------------------"
+    echo -e "\n---------------------------------TIMER---------------------------------"
+    LC_NUMERIC=C printf "                         The prog ran %.1f seconds.\n" "$execution_time"
+    echo "-----------------------------------------------------------------------"
 }
+
+
 
 
 
@@ -117,12 +119,6 @@ if [ ! -f "$1" ] ;
     help
     timer
     exit 3
-elif [ "$1" != *.csv ]
-    then
-    echo -e "Error : the file isn't a csv file. Please check and try again."
-    help
-    timer
-    exit 4
 fi
 
 
@@ -211,13 +207,15 @@ tr '-' '0' < "$1" > /tmp/temp.csv && mv /tmp/temp.csv "$1"
 case "$2" in
   "hvb")
     if [[ "$3" == "comp" ]]; then
-      # Traitement pour HVB comp
-      if [[ ! -z "$4" ]]; then
-        echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "/output/hvb_comp_${4}.csv"
-        cut -d ';' -f 1,2,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/hvb_comp_${4}.csv"
-      else
-        echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "/output/hvb_comp.csv"
-        cut -d ';' -f 2,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/hvb_comp.csv"
+      # on fait le traitement pour HVB comp ici 
+      
+      if ! [ -z "$4" ]; then # ici si on donne une centrale...
+        echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp_${4}.csv"
+        cat "$1" | grep -E "^$4" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%d;%d\n", $2,$7,$8)} }'  | ./prog | sort -t ';' -k2 -n >> "output/hvb_comp_${4}.csv"
+
+      else # si on donne pas de centrale...
+        echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp.csv"
+         cat "$1" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%d;%d\n", $2,$7,$8)} }' | ./prog | sort -t ':' -k2 -n >> "output/hvb_comp.csv"
       fi
     fi
     ;;
@@ -225,12 +223,12 @@ case "$2" in
   "hva")
     if [[ "$3" == "comp" ]]; then
       # Traitement pour HVA comp
-      if [[ ! -z "$4" ]]; then
-        echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "/output/hva_comp_${4}.csv"
-        cut -d ';' -f 1,3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/hva_comp_${4}.csv"
+      if ! [ -z "$4" ]; then
+        echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "output/hva_comp_${4}.csv"
+        grep -E "^$4" "$1" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | cut -d ';' -f 3,7,8 | ./prog | sort -t ';' -k2 -n >> "output/hva_comp_${4}.csv"
       else
-        echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "/output/hva_comp.csv"
-        cut -d ';' -f 3,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/hva_comp.csv"
+        echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "output/hva_comp.csv"
+        awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/hva_comp.csv"
       fi
     fi
     ;;
@@ -239,67 +237,74 @@ case "$2" in
     case "$3" in
       "all")
         # First, if a centrale has been added by the user :
-        if [[ ! -z "$4" ]]; then
-          echo "LV-Stations:Capacity:TotalConsumption(all)" > "/output/lv_all_${4}.csv"
-          cut -d ';' -f 1,4-8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_all_${4}.csv"
+        if ! [ -z "$4" ]; then
+          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_${4}.csv"
+          grep -E "^$4" "$1" | awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/lv_all_${4}.csv"
 
           # Extraction of the 10 stations with the lowest consumption
-          echo "LV-Stations:Capacity:TotalConsumption(all)" > "/output/lv_all_minmax.csv"
-          cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | head -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
+          cut -d ';' -f 1,3,2 "output/lv_all_${4}.csv" | sort -t ';' -k2 -n | head -n 10 | \
+            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # Extraction of the 10 positions with the highest consumption
-          cut -d ';' -f 1,3,2 "/output/lv_all_${4}.csv" | sort -t ';' -k2 -n | tail -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+          cut -d ';' -f 1,3,2 "output/lv_all_${4}.csv" | sort -t ';' -k2 -n | tail -n 10 | \
+            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # Deleting the difference column (4th column) that helped us to sort out by consumtion...
-          cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && \
-            mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
+          cut -d ';' --complement -f 4 "output/lv_all_minmax.csv" > "output/lv_all_minmax_tmp.csv" && \
+            mv "output/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
+
 
         # Now, if $4 is empty 
         else
-          echo "LV-Stations:Capacity:TotalConsumption(all)" > "/output/lv_all.csv"
-          cut -d ';' -f 4-8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_all.csv"
+          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all.csv"
+          awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/lv_all.csv"
 
           # Same as before, extraction of the 10 stations with the lowest consumption
-          echo "LV-Stations:Capacity:TotalConsumption(all)" > "/output/lv_all_minmax.csv"
-          cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
+          cut -d ';' -f 1,3,2 "output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | \
+            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # Extraction of the 10 positions with the highest consumption
-          cut -d ';' -f 1,3,2 "/output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "/output/lv_all_minmax.csv"
+          cut -d ';' -f 1,3,2 "output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | \
+            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # And finally, deleting the difference column (4th column) that helped us to sort out by consumtion...
-          cut -d ';' --complement -f 4 "/output/lv_all_minmax.csv" > "/output/lv_all_minmax_tmp.csv" && \
-            mv "/output/lv_all_minmax_tmp.csv" "/output/lv_all_minmax.csv"
+          cut -d ';' --complement -f 4 "output/lv_all_minmax.csv" > "output/lv_all_minmax_tmp.csv" && \
+            mv "output/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
         fi
         ;;
 
       "comp")
         # Traitement pour LV comp
-        if [[ ! -z "$4" ]]; then
-          echo "LV-Stations:Capacity:TotalConsumption(companies)" > "/output/lv_comp_${4}.csv"
-          cut -d ';' -f 1,4,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_comp_${4}.csv"
-        else
-          echo "LV-Stations:Capacity:TotalConsumption(companies)" > "/output/lv_comp.csv"
-          cut -d ';' -f 4,5,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_comp.csv"
+        if ! [ -z "$4" ]; then
+          echo "LV-Stations:Capacity:TotalConsumption(companies)" > "output/lv_comp_${4}.csv"
+          grep -E "^$4" "$1" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_comp_${4}.csv"
+          
+        # If the centrale isn't specified by the user...
+        else 
+          echo "LV-Stations:Capacity:TotalConsumption(companies)" > "output/lv_comp.csv"
+          awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_comp.csv"
         fi
         ;;
 
       "indiv")
         # Traitement pour LV indiv
-        if [[ ! -z "$4" ]]; then
-          echo "LV-Stations:Capacity:TotalConsumption(indivivuals)" > "/output/lv_indiv_${4}.csv"
-          cut -d ';' -f 1,4,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_indiv_${4}.csv"
+        if ! [ -z "$4" ]; then
+          echo "LV-Stations:Capacity:TotalConsumption(indivivuals)" > "output/lv_indiv_${4}.csv"
+          grep -E "^$4" "$1" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_indiv_${4}.csv"
         else
-          echo "LV-Stations:Capacity:TotalConsumption(individuals)" > "/output/lv_indiv.csv"
-          cut -d ';' -f 4,6,7,8 "$1" | ./prog | sort -t ';' -k2 -n >> "/output/lv_indiv.csv"
+          echo "LV-Stations:Capacity:TotalConsumption(individuals)" > "output/lv_indiv.csv"
+          awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_indiv.csv"
         fi
         ;;
     esac
     ;;
 esac 
+
+
+
+
 
 
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
@@ -380,6 +385,10 @@ fi
 end_time=$(date +%s)
 execution_time=$((end_time-start_time)) 
 timer 
+
+
+
+
 
 
 
