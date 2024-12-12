@@ -32,7 +32,7 @@ AVL* DoubleLeftRotation(AVL* tree);
 AVL* DoubleRightRotation(AVL* tree); 
 
 // Function that checks the equilibre of the tree and decide what rotation is suitable to get it equilibrated if it's not... 
-AVL* equilibrageAVL(AVL* tree); 
+AVL* balancingAVL(AVL* tree); 
 
 // AVL insert function (by ID)
 AVL* insertAVL(AVL* tree, int* h, int id, int capacity, int conso);
