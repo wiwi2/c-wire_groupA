@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #include "structure.h"
 
 AVL* createNodeAVL(int id, int capacity, int conso){
