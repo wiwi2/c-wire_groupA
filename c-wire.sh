@@ -354,7 +354,7 @@ while IFS=';' read -r id sum_conso capa; do
     fi
 
     # Finally, we add the modified line to the output file that we'll need
-    echo "$id;$capa;$sum_conso;$partie_verte;$partie_rouge" >> "/tmp/lv_info_graph_with_parts.csv"
+    echo "$id;$sum_conso;$capa;$partie_verte;$partie_rouge" >> "/tmp/lv_info_graph_with_parts.csv"
 done < "/tmp/lv_info_graph.csv" # in this loop, we used the copy creaated earlier. 
 
 
@@ -379,8 +379,8 @@ set boxwidth 0.9
 # We define the color palette (green for capacity and red for overload)
 set palette defined (0 "green", 1 "red")
 
-# We enter the data from the file with all the UTILE informations to draw the histogram 
-plot '/tmp/lv_info_graph.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
+# We enter the data from the file with all the useful informations to draw the histogram 
+plot '/tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
      '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
 
 # End of Gnuplot commands  
