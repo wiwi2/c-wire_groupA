@@ -190,7 +190,7 @@ AVL* insertAVL(AVL* tree, int* h, int id, int capacity, int conso) { // fuite mÃ
   	  tree->pLeft = insertAVL(tree->pLeft, h, id, capacity, conso);
     	*h = -(*h);
 	} else if (id > tree->station_id) {
-		//if the element is is bigger, insert on the right
+		//if the element id is bigger, insert on the right
    	 tree->pRight = insertAVL(tree->pRight, h, id, capacity, conso);
 	} else { //element id's already present
   	  tree->sum_conso += conso;
