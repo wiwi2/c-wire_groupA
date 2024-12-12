@@ -144,10 +144,10 @@ AVL* DoubleRightRotation(AVL* Tree){
 
 
 // Function to know what rotation is suitable to the situation of the AVL Tree 
-AVL* equilibrageAVL(AVL* Tree){
+AVL* balancingAVL(AVL* Tree){
       if(Tree==NULL){
             printf("Error : AVL is NULL. Please try again."); 
-            exit(50); 
+            exit(50);   
       }
       if(Tree->eq >= 2){
 	      //case where the tree is unbalanced on the right
@@ -202,7 +202,7 @@ AVL* insertAVL(AVL* tree, int* h, int id, int capacity, int conso) { // fuite mÃ
     // update of equilibrium factors 
     if (*h != 0) {
         tree->eq = tree->eq + *h;
-        tree = equilibrageAVL(tree);
+        tree = balancingAVL(tree);
 
         if (tree->eq == 0) { //height's update
             *h = 0;
