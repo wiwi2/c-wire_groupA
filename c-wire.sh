@@ -212,7 +212,7 @@ case "$2" in
     # If the centrale is specified by the user... (if $4 isn't empty)
       if ! [ -z "$4" ]; then 
         echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp_${4}.csv"
-        cat "$1" | grep -E "^$4" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%d;%d\n", $2,$7,$8)} }'  | ./prog | sort -t ';' -k2 -n >> "output/hvb_comp_${4}.csv"
+        cat "$1" | grep -E "^$4" | awk -F ':' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%d;%d\n", $2,$7,$8)} }'  | ./prog | sort -t ':' -k2 -n >> "output/hvb_comp_${4}.csv"
     # If the centrale isn't specified by the user... (if $4 is empty)
       else 
         echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp.csv"
@@ -226,11 +226,11 @@ case "$2" in
         # If the centrale is specified by the user... (if $4 isn't empty)
       if ! [ -z "$4" ]; then
         echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "output/hva_comp_${4}.csv"
-        cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/hva_comp_${4}.csv"
+        cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | ./prog | sort -t ':' -k2 -n >> "output/hva_comp_${4}.csv"
         # If the centrale isn't specified by the user... (if $4 is empty)
       else
         echo "HVA-Stations:Capacity:TotalConsumption(companies)" > "output/hva_comp.csv"
-        cat "$1" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/hva_comp.csv"
+        cat "$1" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%d;%d\n", $3, $7, $8)} }' | ./prog | sort -t ':' -k2 -n >> "output/hva_comp.csv"
       fi
     fi
     ;;
@@ -242,41 +242,46 @@ case "$2" in
         # First, if a centrale has been added by the user : (so if $4 isn't empty) 
         if ! [ -z "$4" ]; then
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_${4}.csv"
-          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/lv_all_${4}.csv"
+          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8)} }' | ./prog | sort -t ':' -k2 -n >> "output/lv_all_${4}.csv"
 
           # Extraction of the 10 stations with the lowest consumption
-          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
-          cut -d ';' -f 1,3,2 "output/lv_all_${4}.csv" | sort -t ';' -k2 -n | head -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
+          echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax_${4}.csv"
+          cat "output/lv_all_${4}.csv" | sort -t ':' -k3 -n | head -n 10 | \
+            awk -F':' '{ printf("%d:%d:%d:%d\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax_${4}.csv"
 
           # Extraction of the 10 positions with the highest consumption
-          cut -d ';' -f 1,3,2 "output/lv_all_${4}.csv" | sort -t ';' -k2 -n | tail -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
+          cat "output/lv_all_${4}.csv" | sort -t ':' -k3 -n | tail -n 10 | \
+            awk -F':' '{ printf("%d:%d:%d:%d\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax_${4}.csv"
 
           # Deleting the difference column (4th column) that helped us to sort out by consumtion...
           # And to avoid overwriting our file, we use a temporary file that we'll rename with mv afterward. 
-          cut -d ';' --complement -f 4 "output/lv_all_minmax.csv" > "output/lv_all_minmax_tmp.csv" && \
-            mv "output/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
+         cut -d ':' --complement -f 4 "output/lv_all_minmax_${4}.csv" > "tmp/lv_all_minmax_tmp_${4}.csv" && \
+            mv "tmp/lv_all_minmax_tmp_${4}.csv" "output/lv_all_minmax_${4}.csv"
 
 
         # Now, if a centrale hasn't been added by the user  (so, if $4 is empty this time)
         else
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all.csv"
-          cat "$1" | awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8)} }' | ./prog | sort -t ';' -k2 -n >> "output/lv_all.csv"
+          cat "$1" | awk -F ';' '{if($4 != 0) {printf("%d;%d;%d\n", $4, $7, $8) } }' | ./prog | sort -t ':' -k2 -n >> "output/lv_all.csv"  
 
           # Same as before, extraction of the 10 stations with the lowest consumption that are in the begeinning of our file lv_all.csv
+          
+          
+         # A FAIRE : IGNORER LA PREMIERE LIGNE DU FICHIER QU ON UTILISE ! erreur 0:0:0 pour lv all...
+         
+          
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
-          cut -d ';' -f 1,3,2 "output/lv_all.csv" | sort -t ';' -k2 -n | head -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
+          cat "output/lv_all.csv" | sort -t ':' -k3 -n | head -n 10 | \
+            awk -F ':' '{ printf("%d:%d:%d:%d\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # Extraction of the 10 positions with the highest consumption
-          cut -d ';' -f 1,3,2 "output/lv_all.csv" | sort -t ';' -k2 -n | tail -n 10 | \
-            awk -F';' '{print $1, $2, $3, $3 - $2}' | sort -t ';' -k4 -nr >> "output/lv_all_minmax.csv"
+          cat "output/lv_all.csv" | sort -t ':' -k3 -n | tail -n 10 | \
+            awk -F ':' '{ printf("%d:%d:%d:%d\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax.csv"
 
           # And finally, deleting the difference column (4th column) that helped us to sort out by consumtion...
           # Again, we use a temporary file to avoid overwriting lv_all_minmax.csv and we rename it at the end
-          cut -d ';' --complement -f 4 "output/lv_all_minmax.csv" > "output/lv_all_minmax_tmp.csv" && \
-            mv "output/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
+          cut -d ':' --complement -f 4 "output/lv_all_minmax.csv" > "tmp/lv_all_minmax_tmp.csv" && \
+            mv "tmp/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
         fi
         ;;
 
@@ -284,12 +289,12 @@ case "$2" in
         # If the centrale is specified by the user... (if $4 isn't empty)
         if ! [ -z "$4" ]; then
           echo "LV-Stations:Capacity:TotalConsumption(companies)" > "output/lv_comp_${4}.csv"
-          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_comp_${4}.csv"
+          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8) } }' | ./prog | sort -t ':' -k2 -n >> "output/lv_comp_${4}.csv"
           
         # If the centrale isn't specified by the user... (if $4 is empty)
         else 
           echo "LV-Stations:Capacity:TotalConsumption(companies)" > "output/lv_comp.csv"
-          cat "$1" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_comp.csv"
+          cat "$1" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%d;%d\n", $4,$7,$8) } }' | ./prog | sort -t ':' -k2 -n >> "output/lv_comp.csv"
         fi
         ;;
 
@@ -297,12 +302,12 @@ case "$2" in
         # If the centrale is specified by the user... (if $4 isn't empty)
         if ! [ -z "$4" ]; then
           echo "LV-Stations:Capacity:TotalConsumption(indivivuals)" > "output/lv_indiv_${4}.csv"
-          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_indiv_${4}.csv"
+          cat "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d\n", $4,$7,$8) } }' | ./prog | sort -t ':' -k2 -n >> "output/lv_indiv_${4}.csv"
 
         # If the centrale isn't specified by the user... (if $4 is empty)
         else
           echo "LV-Stations:Capacity:TotalConsumption(individuals)" > "output/lv_indiv.csv"
-          cat "$1" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d", $4,$7,$8 } }' | ./prog | sort -t ';' -k2 -n >> "output/lv_indiv.csv"
+          cat "$1" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%d;%d\n", $4,$7,$8) } }' | ./prog | sort -t ':' -k2 -n >> "output/lv_indiv.csv"
         fi
         ;;
     esac # end of the second switch case (the little one)
@@ -333,8 +338,15 @@ if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
 
 # We copy the whole output of the case concerned but the first line (we just want the numbers (id:totalconso:capa)) in a new file : we will need it to do the graph
 # But we won't need it any further after this manipulation, that explains why we put it in tmp... 
-tail -n +2 "output/lv_all_minmax.csv" > "tmp/lv_info_graph.csv"
 
+
+
+tail -n +2 "output/lv_all_minmax.csv" > "tmp/lv_info_graph.csv" 
+
+
+
+# ajout temporaire pour verifier que gnugnu fonctionne... à partir du awk (en enlevant les ligne avec des 0...) 
+# | awk -F ';' '{if($1 != 0) { printf("%d:%d:%d:%d:%d\n", $1, $2, $3, $4, $5) } }' > (à voir.. ca fonctionne pas)
 
 # We will modify the file to help us build the graph. First, we'll identify the green and red parts :
 # The green part : the consumption which does not exceed the capacity
@@ -342,7 +354,7 @@ tail -n +2 "output/lv_all_minmax.csv" > "tmp/lv_info_graph.csv"
 
 
 # We'll read the file copied earlier line by line and add new columns for the green and red parts for the graph in a new file :
-while IFS=';' read -r id sum_conso capa; do
+while IFS=':' read -r id sum_conso capa; do
     # In the case that follows, there won't be any red part : the sum_conso is < or = to the capacity : no overload
     if (( sum_conso <= capa )); then 
         partie_verte=$sum_conso
@@ -354,8 +366,8 @@ while IFS=';' read -r id sum_conso capa; do
     fi
 
     # Finally, we add the modified line to the output file that we'll need
-    echo "$id;$sum_conso;$capa;$partie_verte;$partie_rouge" >> "/tmp/lv_info_graph_with_parts.csv"
-done < "/tmp/lv_info_graph.csv" # in this loop, we used the copy creaated earlier. 
+    echo "$id:$sum_conso:$capa:$partie_verte:$partie_rouge" >> "tmp/lv_info_graph_with_parts.csv"
+done < "tmp/lv_info_graph.csv" # in this loop, we used the copy creaated earlier. 
 
 
 # Gnuplot starting command
@@ -363,7 +375,7 @@ gnuplot << EOF
 
 # We set the output terminal to PNG with a specific size
 set terminal png size 1024,768
-set output '/output/lv_all_minmax_graph.png'
+set output 'output/lv_all_minmax_graph.png'
 
 # Set the title of the graph and the titles for the axes (X and Y)
 set title "Load of the 10 most and least loaded LV stations"
@@ -376,15 +388,25 @@ set style histogram cluster gap 1
 set style fill solid border -1
 set boxwidth 0.9
 
-# We define the color palette (green for capacity and red for overload)
+# Define the color palette (green for capacity and red for overload)
 set palette defined (0 "green", 1 "red")
 
-# We enter the data from the file with all the useful informations to draw the histogram 
-plot '/tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
+# Specify the datafile separator
+set datafile separator ";"
+
+# Set the x-tics explicitly if needed (show the stations by their IDs)
+set xtics rotate by 45 # Rotate the x-axis labels for readability (if needed)
+
+# Plot the data from the file with all the useful information to draw the histogram 
+
+set datafile missing NaN
+
+plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
      '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
 
 # End of Gnuplot commands  
 EOF
+
 
 fi 
 
