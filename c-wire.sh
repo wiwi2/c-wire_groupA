@@ -75,20 +75,14 @@ EXECUTABLE="$CODEC_DIR/prog"
 if ! [ -f "$EXECUTABLE" ]; then # if not, we start the compilation...
     # Go to the codeC folder and run make
     if ! (cd "$CODEC_DIR" && make); then # if the output of make isn't 0, the compilation failed
-        echo "Erreur : La compilation a échoué. Veuillez réessayer."
+       "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
+        timer
         exit 9
     fi
 fi
 # -------------------------
     
-    # Check if the executable was generated after compilation
-    if [ ! -f "$EXECUTABLE" ]; then
-        echo "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
-        timer
-        exit 10
-    fi
-fi
-
+   
 
 # Now we start by checking everything about the arguments...
 # if -h is encountered in the options, regardless of its position, the help will be displayed 
