@@ -64,17 +64,22 @@ if [[ ! -d "output" ]]; then
 fi
 
 
+# ------ COMPILATION ------
+
+# Set the path to the codeC folder
+CODEC_DIR="./codeC"
 # We store the name of the expected executable (defined in our makefile) 
-EXECUTABLE="prog"
+EXECUTABLE="$CODEC_DIR/prog"
 
 # Check if the executable file exists
 if ! [ -f "$EXECUTABLE" ]; then # if not, we start the compilation...
-    # Run the compilation using make
-    if ! make; then # if the output of make isn't 0, the compilation failed
-        echo "Error: Compilation failed. Please try again."
-        timer
+    # Go to the codeC folder and run make
+    if ! (cd "$CODEC_DIR" && make); then # if the output of make isn't 0, the compilation failed
+        echo "Erreur : La compilation a échoué. Veuillez réessayer."
         exit 9
     fi
+fi
+# -------------------------
     
     # Check if the executable was generated after compilation
     if [ ! -f "$EXECUTABLE" ]; then
