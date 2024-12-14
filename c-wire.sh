@@ -402,15 +402,12 @@ set boxwidth 0.9
 set palette defined (0 "green", 1 "red")
 
 # Specify the datafile separator
-set datafile separator ";"
+set datafile separator ":"
 
 # Set the x-tics explicitly if needed (show the stations by their IDs)
 set xtics rotate by 45 # Rotate the x-axis labels for readability (if needed)
 
 # Plot the data from the file with all the useful information to draw the histogram 
-
-set datafile missing NaN
-
 plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
      '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
 
