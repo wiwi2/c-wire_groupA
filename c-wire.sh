@@ -331,12 +331,6 @@ esac # end of the first switch case (the big one)
 
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
 
-
-# et commentaires sur partie verte et rouge à voir aussi :
-#partie verte : min ( capa, conso_totale ) 
-# partie rouge : max ( 0, conso - capa )
-
-
 # à faire : trier les exit ; -> fil perdu à un moment encore...
 
 # ne pas oublier de test le machin pour voir si les free sont bien fait... 
@@ -348,20 +342,12 @@ if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
 
 # We copy the whole output of the case concerned but the first line (we just want the numbers (id:totalconso:capa)) in a new file : we will need it to do the graph
 # But we won't need it any further after this manipulation, that explains why we put it in tmp... 
-
-
-
 tail -n +2 "output/lv_all_minmax.csv" > "tmp/lv_info_graph.csv" 
 
-
-
-# ajout temporaire pour verifier que gnugnu fonctionne... à partir du awk (en enlevant les ligne avec des 0...) 
-# | awk -F ';' '{if($1 != 0) { printf("%d:%d:%d:%d:%d\n", $1, $2, $3, $4, $5) } }' > (à voir.. ca fonctionne pas)
 
 # We will modify the file to help us build the graph. First, we'll identify the green and red parts :
 # The green part : the consumption which does not exceed the capacity
 # The red part is the difference between consumption and capacity (appears if : sum_conso > capa) 
-
 
 # We'll read the file copied earlier line by line and add new columns for the green and red parts for the graph in a new file :
 while IFS=':' read -r id sum_conso capa; do
@@ -381,40 +367,35 @@ done < "tmp/lv_info_graph.csv" # in this loop, we used the copy creaated earlier
 
 
 # Gnuplot starting command
-gnuplot << EOF 
+gnuplot << EOF
 
-# We set the output terminal to PNG with a specific size
-set terminal png size 1024,768
+# We set the output terminal to PNG with a specific size and font
+set terminal png size 1200,1100 font "Open Sans" 20
 set output 'output/lv_all_minmax_graph.png'
-
-# Set the title of the graph and the titles for the axes (X and Y)
-set title "Load of the 10 most and least loaded LV stations"
-set xlabel "LV Stations"
-set ylabel "Load (kWh)"
-
-# Set the bar chart style, with a gap between clusters of bars
-set style data histogram
-set style histogram cluster gap 1
-set style fill solid border -1
-set boxwidth 0.9
-
-# Define the color palette (green for capacity and red for overload)
-set palette defined (0 "green", 1 "red")
-
-# Specify the datafile separator
 set datafile separator ":"
 
-# Set the x-tics explicitly if needed (show the stations by their IDs)
-set xtics rotate by 45 # Rotate the x-axis labels for readability (if needed)
+# Set the legend position and other graphical settings
+set key left
+set grid y
 
-# Plot the data from the file with all the useful information to draw the histogram 
-plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" with boxes lc rgb "green", \
-     '' using 5:xtic(1) title "Overload (Red)" with boxes lc rgb "red"
+# Set the style for the histogram (rowstacked, box width, fill pattern)
+set style data histograms
+set style histogram rowstacked
+set boxwidth 0.7
 
-# End of Gnuplot commands  
+# Set the fill to solid (fully filled) without border lines
+set style fill solid 1.0 border -1
+
+# Set the y-axis ticks and range
+set ytics nomirror
+set ylabel "Load (kWh)"
+set xlabel "LV Stations"
+
+# Plot the data with stacked bars (Green for capacity, Red for overload)
+plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" lc rgb "green" lw 3, \
+     '' using 5:xtic(1) title "Overload (Red)" lc rgb "red" lw 3
+
 EOF
-
-
 fi 
 
 
