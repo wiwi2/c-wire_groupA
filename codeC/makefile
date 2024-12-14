@@ -1,14 +1,13 @@
 # ----------------------- MAKEFILE -----------------------
 
-
 # Name of the final executable
 EXEC = prog
 
 # List of source files
 SRCS = main.c function.c
 
-# We define the directory for object files (exterior to the current directory which is codeC)
-OBJ_DIR = $(CURDIR)/../tmp 
+# We define the directory for object files
+OBJ_DIR = $(CURDIR)/../tmp
 
 # List of object files generated from sources
 OBJS = $(SRCS:.c=.o)
