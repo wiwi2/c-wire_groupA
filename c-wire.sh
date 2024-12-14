@@ -371,7 +371,7 @@ gnuplot << EOF
 
 # We set the output terminal to PNG with a specific size and font
 set terminal png size 1200,1100 font "Open Sans" 20
-set output 'output/lv_all_minmax_graph.png'
+set output 'graphs/lv_all_minmax_graph.png'
 set datafile separator ":"
 
 # Set the legend position and other graphical settings
