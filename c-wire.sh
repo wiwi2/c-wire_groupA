@@ -210,9 +210,8 @@ case "$2" in
     if [[ "$3" == "comp" ]]; then
     # If the centrale is specified by the user... (if $4 isn't empty)
       if ! [ -z "$4" ]; then 
-       # echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp_${4}.csv"
+       echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp_${4}.csv"
         cat "$1" | grep -E "^$4" | awk -F ':' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%d;%d\n", $2,$7,$8)} }'  | ./codeC/prog | sort -t ':' -k2 -n > "output/hvb_comp_${4}.csv"
-        echo "HVB-Stations:Capacity:TotalConsumption(companies)" | cat - "output/hvb_comp_${4}.csv" > "tmp/temp_hvbcomp.csv" && mv "tmp/temp_hvbcomp.csv" "output/hvb_comp_${4}.csv"
     # If the centrale isn't specified by the user... (if $4 is empty)
       else 
         echo "HVB-Stations:Capacity:TotalConsumption(companies)" > "output/hvb_comp.csv"
