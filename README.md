@@ -11,7 +11,7 @@
             - input  : Celui-ci est vide et ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
             - output : Comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
             - tests  : Celui-ci a un exemple de résultat après execution du programme. 
-            - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution... Il sera vider à chaque fois
+            - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution... Il sera vider à chaque fois donc sera finalement toujours vide aux yeux de l'utilisateur. 
 
 
 ## Guides des commandes 
