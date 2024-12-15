@@ -340,7 +340,7 @@ tail -n +2 "output/lv_all_minmax.csv" > "tmp/lv_info_graph.csv"
 # The red part is the difference between consumption and capacity (appears if : sum_conso > capa) 
 
 # We'll read the file copied earlier line by line and add new columns for the green and red parts for the graph in a new file :
-while IFS=':' read -r id sum_conso capa; do
+while IFS=':' read -r id capa sum_conso; do
     # In the case that follows, there won't be any red part : the sum_conso is < or = to the capacity : no overload
     if (( sum_conso <= capa )); then 
         partie_verte=$sum_conso
