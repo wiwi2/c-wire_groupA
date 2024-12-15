@@ -1,10 +1,13 @@
----------------------- READ ME ----------------------
-
 #groupeA-MEF2
 
-Ce projet a pour but de ... 
+## Idée du projet
+      Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des désirs de l'utilisateur. Celui-ci utilise une partie shell pour trier des données, et une partie c pour calculer une partie de ces données. 
 
-Le projet se compose de 5 dossiers ... 
+## Composantes du projet
+      Le projet se compose de 6 dossiers : 
+            - codeC : celui-ci regroupe tout ce qui est nécéssaire au fonctionnement de la partie c du projet (i.e : fonctions, strucutres, main, makefile...) 
+            - input : celui-ci est vide et sert si ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
+            - output : comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
 
 
 ## Guides des commandes 
