@@ -83,7 +83,7 @@ if ! [ -f "$EXECUTABLE" ]; then # if not, we start the compilation...
     if ! (cd "$CODEC_DIR" && make); then # if the output of make isn't 0, the compilation failed
        "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
         timer
-        exit 9
+        exit 1
     fi
 fi
 # -------------------------
@@ -98,7 +98,7 @@ for arg in "$@"; do
     	echo -e "\nYou chose to display the help :\n"
         help
         timer
-        exit 1
+        exit 2
     fi
 done
 
@@ -108,7 +108,7 @@ if [ "$#" -lt 3 ]; # -lt = less than ; to check how many options there are
     echo "Error : some options are missing."
     help
     timer
-    exit 2
+    exit 3
 fi
 
 # Recovery of the csv file and the options passed as argument
@@ -123,7 +123,7 @@ if [ ! -f "$1" ] ;
     echo -e "Error : the file $1 does not exist or the path is incorrect. \nPlease check its existence of the path to the file."
     help
     timer
-    exit 3
+    exit 4
 fi
 
 
@@ -146,7 +146,7 @@ then
     echo "Error : the type of station '$2' is invalid. Possible values : hvb, hva, lv."
     help
     timer
-    exit 5
+    exit 6
 fi
 
 
@@ -156,7 +156,7 @@ then
     echo "Error : the type of consumer '$3' is invalid. Possible values : comp, indiv, all."
     help
     timer
-    exit 6
+    exit 7
 fi
 
 
@@ -166,14 +166,14 @@ if [ ! -z "$4" ]; then  # if the argument exist (argument != void) // voir ici
         echo "Error: The centrale's id must be a whole number between 1 and 5."
         help
         timer
-        exit 9
+        exit 8
     fi
 # if the id is below 1 or above 5 : error
     if [[ "$4" -lt 1 || "$4" -gt 5 ]]; then
         echo "Error: The centrale's id must be between 1 and 5 (inclusive)."
         help
         timer
-        exit 10
+        exit 9
     fi
 fi
 
@@ -186,7 +186,7 @@ then
     echo "Error : the combinations 'hvb all' and 'hvb indiv' are prohibited."
     help
     timer
-    exit 7
+    exit 10
 fi
 
 # With hva station 
@@ -195,7 +195,7 @@ then
     echo "Error : the combinations 'hva all' and 'hva indiv' are prohibited."
     help
     timer
-    exit 8
+    exit 11
 fi
 
 
@@ -326,12 +326,6 @@ esac # end of the first switch case (the big one)
 
 
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
-
-# à faire : trier les exit ; -> fil perdu à un moment encore...
-
-# ne pas oublier de test le machin pour voir si les free sont bien fait... 
-# check tout le doc pour verif que rien n a été oublié !!! 
-
 
 
 if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
