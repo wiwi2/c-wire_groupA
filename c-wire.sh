@@ -64,6 +64,12 @@ if [[ ! -d "output" ]]; then
 fi
 
 
+# Same thing with the "input" directory
+if [[ ! -d "input" ]]; then
+    mkdir -p "input"
+fi
+
+
 # ------ COMPILATION ------
 
 # Set the path to the codeC folder
