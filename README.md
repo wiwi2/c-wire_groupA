@@ -13,11 +13,12 @@
             - tests  : Celui-ci a un exemple de résultat après execution du programme. 
             - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution... Il sera vider à chaque fois donc sera finalement toujours vide aux yeux de l'utilisateur. 
 
+      N.B : si le dossier graphs, input, output ou tmp n'existe pas, le programme va se charger de les créer dans tous les cas. 
 
 ## Guides des commandes 
       A partir du terminal, pour compiler : 
-          1) Se placer dans le dossier groupA_MEF2 avec la commande 'cd groupA_MEF2' après avoir télécharger l'ensemble des composants du projet
-          2) Etre sur d'avoir les droits nécéssaire sur le script shell... On vous invite donc à taper la commande suivante avant de vous lancer : 'chmod 777 c-wire.sh'
+          1) Se placer dans le dossier groupA_MEF2 avec la commande 'cd groupA_MEF2' après avoir télécharger l'ensemble des composantes du projet.
+          2) Etre sûr d'avoir les droits nécéssaires sur le script shell... On vous invite donc à taper la commande suivante avant de vous lancer : 'chmod 777 c-wire.sh'
           3) On vous invite à commencer par écrire dans le terminal : ' ./c-wire.sh -h ' et de regarder l'aide qui apparaitra. Cela vous permettra de passer en revue tous les traitements possibles. 
           4) Enfin, vous pouvez simplement lancer le programme avec : ./c-wire.sh [chemin du fichier csv à traiter] [station] [consommateur] (identifiant de la centrale).   
 
