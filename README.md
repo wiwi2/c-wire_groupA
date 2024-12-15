@@ -1,13 +1,17 @@
 #groupeA-MEF2
 
 ## Idée du projet
-      Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des désirs de l'utilisateur. Celui-ci utilise une partie shell pour trier des données, et une partie c pour calculer une partie de ces données. 
+      Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des désirs de l'utilisateur. 
+      Celui-ci utilise une partie shell pour trier des données, et une partie c pour calculer une partie de ces données. 
 
 ## Composantes du projet
       Le projet se compose de 6 dossiers : 
-            - codeC : celui-ci regroupe tout ce qui est nécéssaire au fonctionnement de la partie c du projet (i.e : fonctions, strucutres, main, makefile...) 
-            - input : celui-ci est vide et sert si ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
-            - output : comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
+            - codeC  : Celui-ci regroupe tout ce qui est nécéssaire au fonctionnement de la partie c du projet (i.e : fonctions, strucutres, main, makefile...) 
+            - graphs : Celui-ci est vide avant execution. On y retrouvera un graphique lorsque l'utilisateur demande un tri avec les paramètres 'lv all' ou 'lv all [id_centrale]'. 
+            - input  : Celui-ci est vide et ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
+            - output : Comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
+            - tests  : Celui-ci a un exemple de résultat après execution du programme. 
+            - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution... Il sera vider à chaque fois
 
 
 ## Guides des commandes 
