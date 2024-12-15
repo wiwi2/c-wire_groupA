@@ -402,7 +402,7 @@ end_time=$(date +%s)
 execution_time=$((end_time-start_time)) 
 timer 
 
-# To finish, we empty the tmp directory
+# To finish, we clear every temporary files needed for this treatment
 rm -rf tmp/*
 
 
