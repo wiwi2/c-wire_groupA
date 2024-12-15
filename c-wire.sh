@@ -367,7 +367,7 @@ set datafile separator ":"
 # Set the legend position and other graphical settings
 set key left
 set grid y
-set xtics rotate by 35 offset 0, -1.5
+set xtics rotate by 35 offset -1.5, -1.5
 set ytics nomirror
 
 
