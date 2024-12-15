@@ -402,15 +402,7 @@ end_time=$(date +%s)
 execution_time=$((end_time-start_time)) 
 timer 
 
-
-
-
-
-
-
-
-
-
-
+# To finish, we empty the tmp directory
+rm -rf tmp/*
 
 
