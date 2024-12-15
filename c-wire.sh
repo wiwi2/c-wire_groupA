@@ -367,6 +367,9 @@ set datafile separator ":"
 # Set the legend position and other graphical settings
 set key left
 set grid y
+set xtics rotate by 35 offset 0, -1.5
+set ytics nomirror
+
 
 # Set the style for the histogram (rowstacked, box width, fill pattern)
 set style data histograms
@@ -376,8 +379,7 @@ set boxwidth 0.7
 # Set the fill to solid (fully filled) without border lines
 set style fill solid 1.0 border -1
 
-# Set the y-axis ticks and range
-set ytics nomirror
+# Set the y and x axis titles
 set ylabel "Load (kWh)"
 set xlabel "LV Stations"
 
