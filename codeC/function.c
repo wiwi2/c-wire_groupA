@@ -4,7 +4,7 @@
 
 #include "structure.h"
 
-AVL* createNodeAVL(int id, int capacity, int conso){
+AVL* createNodeAVL(int id, long int capacity, long int conso){
       AVL* New = malloc(sizeof(AVL)); 
       if(New==NULL){
         printf("Failed to make some space for an AVL... \nPlease try again.\n"); //immediate stop if the allocation failed
@@ -172,7 +172,7 @@ AVL* balancingAVL(AVL* Tree){
 
 
 // function to insert new nodes in the AVL and returns the updated AVL 
-AVL* insertAVL(AVL* tree, int* h, int id, int capacity, int conso) { // fuite mémoire ici , voir capa et conso mise à jour au meme endroit...
+AVL* insertAVL(AVL* tree, int* h, int id, long int capacity, long int conso) { // fuite mémoire ici , voir capa et conso mise à jour au meme endroit...
 
     if (tree == NULL) {
     AVL* New = createNodeAVL(id, capacity, conso); // if the tree is empty, create a new node
@@ -221,11 +221,10 @@ void displayAndFree(AVL* tree) {
         displayAndFree(tree->pLeft);   // Process left child
         displayAndFree(tree->pRight);  // Process right child
         // Print current node in "id;capacity;sum_conso" format
-        printf("%d:%d:%d\n", tree->station_id, tree->capacity, tree->sum_conso);
+        printf("%d:%ld:%ld\n", tree->station_id, tree->capacity, tree->sum_conso);
         free(tree); // Free memory from children to parents... 
     }
 }
-
 
 
 
