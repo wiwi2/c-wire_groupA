@@ -5,13 +5,13 @@
 # Function to display the help
 help() {
     echo -e "...................................HELP............................................\n"
-    echo -e "\n\nHow to use: $0 <file_path> <type_station> <type_consumer> [centrale_id]"
+    echo -e "\n\nHow to use: $0 <file_path> <type_station> <type_consumer> [powerplant_id]"
     echo
     echo "The various options :"
     echo "  file_path            : Path to the csv file. This option is obligatory." 
     echo "  type_station         : Type of station to process. Possible values : hvb, hva, lv. This option is obligatory."
     echo "  type_consumer        : Type of consumer to process. Possible values : comp, indiv, all. This option is obligatory."
-    echo "  centrale_id          : Id of the centrale. There's only 5 centrales, so it has to be between 1 and 5 included. This option is optional : it will sort out the station chosen under the centrale given."
+    echo "  powerplant_id          : Id of the power plant. There's only 5 power plants, so it has to be between 1 and 5 included. This option is optional : it will sort out the station chosen under the giver power plant."
     echo "  -h                   : Display this help."
     echo -e "\n \nMore explanations :\n"
     echo "  hvb ; hva ; lv : Are for a station (HV-B station, HV-A station, LV post)" 
@@ -80,11 +80,10 @@ EXECUTABLE="$CODEC_DIR/prog"
     # Check if the executable exists 
     # Then go to the codeC folder and run make
     if ! [ -f $EXECUTABLE ]; then
-    make -C codeC
-    if [ $? -ne 0 ]; then # if the output of make isn't 0, the compilation failed
-       "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
-        timer
-        exit 1
+        if ! (cd $CODEC_DIR && make); then # if the output of make isn't 0, the compilation failed
+          echo "Error: The executable '$EXECUTABLE' was not generated after compilation. Please try again."
+          timer
+          exit 1
     fi
 fi
 
@@ -117,7 +116,7 @@ fi
 file_path="$1"
 type_station="$2"
 type_consumer="$3"
-centrale_id="$4"
+powerplant_id="$4"
 
 # Checking the path/existence of the file and if it's a csv file
 if [ ! -f "$1" ] ;
@@ -131,7 +130,7 @@ fi
 
 
 
-# Cheching the options : type of station, type of consumer, id of a centrale... 
+# Cheching the options : type of station, type of consumer, id of a power plant... 
 # Check if both parameters are invalid first :
 if [[ "$2" != "hvb" ]] && [[ "$2" != "hva" ]] && [[ "$2" != "lv" ]] && \
    [[ "$3" != "comp" ]] && [[ "$3" != "indiv" ]] && [[ "$3" != "all" ]]; then
@@ -162,17 +161,17 @@ then
 fi
 
 
-# Checking the existence of the option centrale_id (because it's optionnal); as we know there are just 5 centrales, we check it therefore :
+# Checking the existence of the option powerplant_id (because it's optionnal); as we know there are just 5 power plants, we check it therefore :
 if [ ! -z "$4" ]; then  # if the argument exist (argument != void) // voir ici
     if [[ ! "$4" =~ ^[0-9]+$ ]]; then
-        echo "Error: The centrale's id must be a whole number between 1 and 5."
+        echo "Error: The power plant's id must be a whole number between 1 and 5."
         help
         timer
         exit 8
     fi
 # if the id is below 1 or above 5 : error
     if [[ "$4" -lt 1 || "$4" -gt 5 ]]; then
-        echo "Error: The centrale's id must be between 1 and 5 (inclusive)."
+        echo "Error: The power plant's id must be between 1 and 5 (inclusive)."
         help
         timer
         exit 9
@@ -216,11 +215,11 @@ start_time=$(date +%s.%N)
 case "$2" in
   "hvb")
     if [[ "$3" == "comp" ]]; then
-    # If the centrale is specified by the user... (if $4 isn't empty)
+    # If the power plant is specified by the user... (if $4 isn't empty)
       if ! [ -z "$4" ]; then 
         tr '-' '0' < "$1" | grep -E "^$4" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%ld;%ld\n", $2,$7,$8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/hvb_comp_${4}.csv"
         echo "HVB-Stations:Capacity:TotalConsumption(companies)" | cat - "output/hvb_comp_${4}.csv" > "tmp/tmp_hvbcomp_${4}.csv" && mv "tmp/tmp_hvbcomp_${4}.csv" "output/hvb_comp_${4}.csv"
-   # If the centrale isn't specified by the user... (if $4 is empty)
+   # If the power plant isn't specified by the user... (if $4 is empty)
       else 
          tr '-' '0' < "$1" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%ld;%ld\n", $2,$7,$8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/hvb_comp.csv"
           echo "HVB-Stations:Capacity:TotalConsumption(companies)" | cat - "output/hvb_comp.csv" > "tmp/tmp_hvacomp.csv" && mv "tmp/tmp_hvacomp.csv" "output/hvb_comp.csv"
@@ -231,11 +230,11 @@ case "$2" in
 
   "hva")
     if [[ "$3" == "comp" ]]; then
-        # If the centrale is specified by the user... (if $4 isn't empty)
+        # If the power plant is specified by the user... (if $4 isn't empty)
       if ! [ -z "$4" ]; then
         tr '-' '0' < "$1" | grep -E "^$4" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%ld;%ld\n", $3, $7, $8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/hva_comp_${4}.csv"
         echo "HVA-Stations:Capacity:TotalConsumption(companies)" | cat - "output/hva_comp_${4}.csv" > "tmp/tmp_hvacomp_${4}.csv" && mv "tmp/tmp_hvacomp_${4}.csv" "output/hva_comp_${4}.csv"
-        # If the centrale isn't specified by the user... (if $4 is empty)
+        # If the power plant isn't specified by the user... (if $4 is empty)
       else
         tr '-' '0' < "$1" | awk -F ';' '{if($4 == 0 && $3 != 0) {printf("%d;%ld;%ld\n", $3, $7, $8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/hva_comp.csv"
         echo "HVA-Stations:Capacity:TotalConsumption(companies)" | cat - "output/hva_comp.csv" > "tmp/tmp_hvacomp.csv" && mv "tmp/tmp_hvacomp.csv" "output/hva_comp.csv"
@@ -247,18 +246,21 @@ case "$2" in
    # Little switch case in the lv case for the differents types of consumers (all, comp and indiv) :
     case "$3" in
       "all")
-        # First, if a centrale has been added by the user : (so if $4 isn't empty) 
+        # First, if a power plant has been added by the user : (so if $4 isn't empty) 
         if ! [ -z "$4" ]; then
           tail -n +2 "$1" | tr '-' '0' | grep -E "^$4" | awk -F ';' '{if($4 != 0) {printf("%d;%ld;%ld\n", $4, $7, $8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_all_${4}.csv"
 
           # Extraction of the 10 stations with the lowest consumption
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax_${4}.csv"
           sort -t ':' -k3 -n "output/lv_all_${4}.csv" | head -n 10 | \
-            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax_${4}.csv"
+            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' > "tmp/temp_lv_all_minmax_${4}.csv"
 
           # Extraction of the 10 positions with the highest consumption
           sort -t ':' -k3 -n "output/lv_all_${4}.csv" | tail -n 10 | \
-            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax_${4}.csv"
+            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' >> "tmp/temp_lv_all_minmax_${4}.csv"
+
+          # We sort in function of the 4th colomn that is is the absolute quantity of energy consumed (in a decreasing manner)
+           sort -t ':' -k4 -n "tmp/temp_lv_all_minmax_${4}.csv" >> "output/lv_all_minmax_${4}.csv"
 
         # We add the first line after sorting out everything in the lv all file... 
         echo "LV-Stations:Capacity:TotalConsumption(all)" | cat - "output/lv_all_${4}.csv" > "tmp/tmp_lvall_${4}.csv" && mv "tmp/tmp_lvall_${4}.csv" "output/lv_all_${4}.csv"
@@ -269,23 +271,21 @@ case "$2" in
             mv "tmp/lv_all_minmax_tmp_${4}.csv" "output/lv_all_minmax_${4}.csv"
 
 
-        # Now, if a centrale hasn't been added by the user  (so, if $4 is empty this time)
+        # Now, if a power plant hasn't been added by the user  (so, if $4 is empty this time)
         else
           tail -n +2 "$1" | tr '-' '0' | awk -F ';' '{if($4 != 0) {printf("%d;%ld;%ld\n", $4, $7, $8) } }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_all.csv"  
 
           # Same as before, extraction of the 10 stations with the lowest consumption that are in the begeinning of our file lv_all.csv         
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
            sort -t ':' -k3 -n "output/lv_all.csv" | head -n 10 | \
-            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr  >> "output/lv_all_minmax.csv"
+            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' > "tmp/temp_lv_all_minmax.csv"
 
           # Extraction of the 10 positions with the highest consumption
            sort -t ':' -k3 -n "output/lv_all.csv" | tail -n 10 | \
-            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr  >> "output/lv_all_minmax.csv"
+            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' >> "tmp/temp_lv_all_minmax.csv"
 
-	# We redo a sort for everything together (all the lv stations)
-	(head -n 1 "output/lv_all_minmax.csv" && tail -n +2 "output/lv_all_minmax.csv" | sort -t ':' -k4 -nr) > "output/lv_all_minmax_sorted.csv" && mv "output/lv_all_minmax_sorted.csv" "output/lv_all_minmax.csv"
-
-
+	        # We sort in function of the 4th colomn that is is the absolute quantity of energy consumed (in a decreasing manner)
+           sort -t ':' -k4 -n "tmp/temp_lv_all_minmax.csv" >> "output/lv_all_minmax.csv"
 
         # We add the first line after sorting out everything in the lv all file... 
         echo "LV-Stations:Capacity:TotalConsumption(all)" | cat - "output/lv_all.csv" > "tmp/tmp_lvall.csv" && mv "tmp/tmp_lvall.csv" "output/lv_all.csv"
@@ -298,12 +298,12 @@ case "$2" in
         ;;
 
       "comp")
-        # If the centrale is specified by the user... (if $4 isn't empty)
+        # If the power plant is specified by the user... (if $4 isn't empty)
         if ! [ -z "$4" ]; then
           tr '-' '0' < "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%ld;%ld\n", $4,$7,$8) } }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_comp_${4}.csv"
           echo "LV-Stations:Capacity:TotalConsumption(companies)" | cat - "output/lv_comp_${4}.csv" > "tmp/tmp_lvcomp_${4}" && mv "tmp/tmp_lvcomp_${4}" "output/lv_comp_${4}.csv"
           
-        # If the centrale isn't specified by the user... (if $4 is empty)
+        # If the power plant isn't specified by the user... (if $4 is empty)
         else 
           tr '-' '0' < "$1" | awk -F ';' '{if($4 != 0 && $6 == 0) {printf("%d;%ld;%ld\n", $4,$7,$8) } }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_comp.csv"
           echo "LV-Stations:Capacity:TotalConsumption(companies)" | cat - "output/lv_comp.csv" > "tmp/tmp_lvcomp" && mv "tmp/tmp_lvcomp" "output/lv_comp.csv"
@@ -312,12 +312,12 @@ case "$2" in
         ;;
 
       "indiv")
-        # If the centrale is specified by the user... (if $4 isn't empty)
+        # If the power plant is specified by the user... (if $4 isn't empty)
         if ! [ -z "$4" ]; then
           tr '-' '0' < "$1" | grep -E "^$4" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%ld;%ld\n", $4,$7,$8) } }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_indiv_${4}.csv"
           echo "LV-Stations:Capacity:TotalConsumption(indivivuals)" | cat - "output/lv_indiv_${4}.csv" > "tmp/tmp_lvindiv_${4}.csv" && mv "tmp/tmp_lvindiv_${4}.csv" "output/lv_indiv_${4}.csv"
 
-        # If the centrale isn't specified by the user... (if $4 is empty)
+        # If the power plant isn't specified by the user... (if $4 is empty)
         else
           tr '-' '0' < "$1" | awk -F ';' '{if($4 != 0 && $5 == 0) {printf("%d;%ld;%ld\n", $4,$7,$8) } }' | ./codeC/prog | sort -t ':' -k2 -n > "output/lv_indiv.csv"
           echo "LV-Stations:Capacity:TotalConsumption(indivivuals)" | cat - "output/lv_indiv.csv" > "tmp/tmp_lvindiv.csv" && mv "tmp/tmp_lvindiv.csv" "output/lv_indiv.csv"
@@ -357,52 +357,55 @@ tail -n +2 "output/$file" > "tmp/lv_info_graph.csv"
 # The red part is the difference between consumption and capacity (appears if : sum_conso > capa) 
 
 # We'll read the file copied earlier line by line and add new columns for the green and red parts for the graph in a new file :
-while IFS=':' read -r id capa sum_conso; do
-    # In the case that follows, there won't be any red part : the sum_conso is < or = to the capacity : no overload
-    if (( sum_conso <= capa )); then 
-        partie_verte=$sum_conso
+while IFS=':' read -r id capa conso; do
+    # In the case that follows, there won't be any red part : the conso is < or = to the capacity : no overload
+    if (( $capa >= $conso )); then 
+        partie_verte=$conso
         partie_rouge=0
-    # Here, sum_conso > capa so there will be a red part :
+    # Here, conso > capa so there will be a red part :
     else
         partie_verte=$capa
-        partie_rouge=$((sum_conso - capa))
+        partie_rouge=$(( conso - capa ))
     fi
 
     # Finally, we add the modified line to the output file that we'll need
-    echo "$id:$sum_conso:$capa:$partie_verte:$partie_rouge" >> "tmp/lv_info_graph_with_parts.csv"
-done < "tmp/lv_info_graph.csv" # in this loop, we used the copy creaated earlier. 
+    echo "$id:$capa:$conso:$partie_verte:$partie_rouge" >> "tmp/lv_info_graph_with_parts.csv"
+done < "tmp/lv_info_graph.csv" # in this loop, we used the copy created earlier. 
 
 
 # Gnuplot starting command
 gnuplot << EOF
 
 # We set the output terminal to PNG with a specific size and font
-set terminal png size 1200,1100 font "Open Sans" 20
+set terminal pngcairo size 1200,1100 enhanced font "Open Sans, 20" background rgb "black"
 set output 'graphs/lv_all_minmax_graph$suffix.png'
 set datafile separator ":"
 
-# Set the legend position and other graphical settings
-set key left
+# Set the legend position and other graphical settings (colors, positions...)
+set key left textcolor rgb "white"
 set grid y
 set xtics rotate by 35 offset -1.5, -1.5
 set ytics nomirror
+set xtics textcolor rgb "white"
+set ytics textcolor rgb "white"
+set border lc rgb "white"
 
 
 # Set the style for the histogram (rowstacked, box width, fill pattern)
 set style data histograms
 set style histogram rowstacked
-set boxwidth 0.7
+set boxwidth 0.8
 
 # Set the fill to solid (fully filled) without border lines
 set style fill solid 1.0 border -1
 
 # Set the y and x axis titles
-set ylabel "Load (kWh)"
-set xlabel "LV Stations"
+set ylabel "Load (kWh)" textcolor rgb "white"
+set xlabel "LV Stations" offset -1,0 textcolor rgb "white"
 
 # Plot the data with stacked bars (Green for capacity, Red for overload)
 plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity" lc rgb "green" lw 3, \
-     '' using 5:xtic(1) title "Overload" lc rgb "red" lw 3
+     '' using 5:xtic(1) title "Overload" lc rgb "red" lw 3 
 
 EOF
 fi 
@@ -413,5 +416,4 @@ end_time=$(date +%s.%N)
 execution_time=$(echo "$end_time - $start_time" | bc) 
 timer 
 
-
-
+# --------- the end ---------
