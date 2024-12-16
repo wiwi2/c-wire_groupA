@@ -45,7 +45,7 @@
 
 ## Guide des commandes 
       A partir du terminal, pour compiler : 
-          1) Se placer dans le dossier groupA_MEF2 avec la commande 'cd groupA_MEF2' après avoir télécharger l'ensemble des composantes du projet.
+          1) Se placer dans le dossier c-wire_groupA-main avec la commande 'cd c-wire_groupA-main' après avoir télécharger l'ensemble des composantes du projet.
           2) Etre sûr d'avoir les droits nécéssaires sur le script shell... On vous invite donc à taper la commande suivante avant de vous lancer : 'chmod 777 c-wire.sh'
           3) On vous invite à commencer par écrire dans le terminal : ' ./c-wire.sh -h ' et de regarder l'aide qui apparaitra. Cela vous permettra de passer en revue tous les traitements possibles. 
           4) Enfin, vous pouvez simplement lancer le programme avec : ./c-wire.sh [chemin du fichier csv à traiter] [station] [consommateur] (identifiant de la centrale).   
