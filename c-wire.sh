@@ -276,11 +276,16 @@ case "$2" in
           # Same as before, extraction of the 10 stations with the lowest consumption that are in the begeinning of our file lv_all.csv         
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax.csv"
            sort -t ':' -k3 -n "output/lv_all.csv" | head -n 10 | \
-            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax.csv"
+            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr  >> "output/lv_all_minmax.csv"
 
           # Extraction of the 10 positions with the highest consumption
            sort -t ':' -k3 -n "output/lv_all.csv" | tail -n 10 | \
-            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr >> "output/lv_all_minmax.csv"
+            awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -nr  >> "output/lv_all_minmax.csv"
+
+	# We redo a sort for everything together (all the lv stations)
+	(head -n 1 "output/lv_all_minmax.csv" && tail -n +2 "output/lv_all_minmax.csv" | sort -t ':' -k4 -nr) > "output/lv_all_minmax_sorted.csv" && mv "output/lv_all_minmax_sorted.csv" "output/lv_all_minmax.csv"
+
+
 
         # We add the first line after sorting out everything in the lv all file... 
         echo "LV-Stations:Capacity:TotalConsumption(all)" | cat - "output/lv_all.csv" > "tmp/tmp_lvall.csv" && mv "tmp/tmp_lvall.csv" "output/lv_all.csv"
@@ -288,7 +293,7 @@ case "$2" in
           # And finally, deleting the difference column (4th column) that helped us to sort out by consumtion...
           # Again, we use a temporary file to avoid overwriting lv_all_minmax.csv and we rename it at the end
           cut -d ':' --complement -f 4 "output/lv_all_minmax.csv" > "tmp/lv_all_minmax_tmp.csv" && \
-            mv "tmp/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
+      mv "tmp/lv_all_minmax_tmp.csv" "output/lv_all_minmax.csv"
         fi
         ;;
 
@@ -396,8 +401,8 @@ set ylabel "Load (kWh)"
 set xlabel "LV Stations"
 
 # Plot the data with stacked bars (Green for capacity, Red for overload)
-plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity (Green)" lc rgb "green" lw 3, \
-     '' using 5:xtic(1) title "Overload (Red)" lc rgb "red" lw 3
+plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity" lc rgb "green" lw 3, \
+     '' using 5:xtic(1) title "Overload" lc rgb "red" lw 3
 
 EOF
 fi 
@@ -407,7 +412,6 @@ fi
 end_time=$(date +%s.%N)
 execution_time=$(echo "$end_time - $start_time" | bc) 
 timer 
-
 
 
 
