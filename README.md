@@ -14,11 +14,11 @@
       1) Stations 
             hvb : tri en fonction des stations HVB 
             hva : tri en fonction des stations HVA 
-            lv : tri en fonction des postes LV 
+            lv  : tri en fonction des postes LV 
       2) Consommateurs
             indiv : tri par rapport aux particuliers sous la station choisie. 
-            comp : tri par rapport aux entreprises sous la station choisie. 
-            all : tri par rapport tous types de consommateurs sous la station choisie (entreprises et particuliers). 
+            comp  : tri par rapport aux entreprises sous la station choisie. 
+            all   : tri par rapport tous types de consommateurs sous la station choisie (entreprises et particuliers). 
       3) Autres 
             -h : affiche l'aide. 
                   N.B : peu importe la position de ce paramètre, l'aide sera affichée. 
@@ -43,7 +43,7 @@
       2) A chaque nouveau traitement, les fichiers générés temporairement sont placés dans tmp et supprimés. Seulement les graphiques (placés dans graphs) ne le seront pas et seront toujours disponibles dans le dossier dédié. 
 
 
-## Guides des commandes 
+## Guide des commandes 
       A partir du terminal, pour compiler : 
           1) Se placer dans le dossier groupA_MEF2 avec la commande 'cd groupA_MEF2' après avoir télécharger l'ensemble des composantes du projet.
           2) Etre sûr d'avoir les droits nécéssaires sur le script shell... On vous invite donc à taper la commande suivante avant de vous lancer : 'chmod 777 c-wire.sh'
