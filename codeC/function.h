@@ -5,7 +5,7 @@
 #include "structure.h"
 
 // Function to create a new node
-AVL* createNode(int id, int capacity, int total_consumption);
+AVL* createNode(int id, long int capacity, long int conso);
 
 // Function to get the max between two values
 int max2(int id1, int id2); 
@@ -35,7 +35,7 @@ AVL* DoubleRightRotation(AVL* tree);
 AVL* balancingAVL(AVL* tree); 
 
 // AVL insert function (by ID)
-AVL* insertAVL(AVL* tree, int* h, int id, int capacity, int conso);
+AVL* insertAVL(AVL* tree, int* h, int id, long int capacity, long int conso);
 
 // Postfix traversal to display and free nodes at the same time
 void displayAndFree(AVL* tree);
