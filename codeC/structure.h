@@ -5,8 +5,8 @@
 consommation of its consummers, plus its child and the value to keep the AVL equilibrated... */ 
 typedef struct _AVL{
     int station_id;
-    int capacity;
-    int sum_conso; 
+    long int capacity;
+    long int sum_conso; 
     int eq; 
     struct _AVL* pLeft; 
     struct _AVL* pRight; 
