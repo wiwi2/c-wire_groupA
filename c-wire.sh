@@ -377,7 +377,7 @@ done < "tmp/lv_info_graph.csv" # in this loop, we used the copy created earlier.
 gnuplot << EOF
 
 # We set the output terminal to PNG with a specific size and font
-set terminal pngcairo size 1200,1100 enhanced font "Open Sans, 20" background rgb "black"
+set terminal pngcairo size 1600,1100 enhanced font "Open Sans, 20" background rgb "black"
 set output 'graphs/lv_all_minmax_graph$suffix.png'
 set datafile separator ":"
 
@@ -390,7 +390,6 @@ set xtics textcolor rgb "white"
 set ytics textcolor rgb "white"
 set border lc rgb "white"
 
-
 # Set the style for the histogram (rowstacked, box width, fill pattern)
 set style data histograms
 set style histogram rowstacked
@@ -399,9 +398,10 @@ set boxwidth 0.8
 # Set the fill to solid (fully filled) without border lines
 set style fill solid 1.0 border -1
 
-# Set the y and x axis titles
-set ylabel "Load (kWh)" textcolor rgb "white"
-set xlabel "LV Stations" offset -1,0 textcolor rgb "white"
+# Set the y and x axis titles and the graph title
+set ylabel "Load (kWh)" font "Open Sans Bold, 22" textcolor rgb "white"
+set xlabel "LV Stations" font "Open Sans Bold, 22" offset -1,0 textcolor rgb "white"
+set title "Energy consumption per LV station" font "Open Sans Bold, 25" textcolor rgb "white"
 
 # Plot the data with stacked bars (Green for capacity, Red for overload)
 plot 'tmp/lv_info_graph_with_parts.csv' using 4:xtic(1) title "Capacity" lc rgb "green" lw 3, \
@@ -416,4 +416,5 @@ end_time=$(date +%s.%N)
 execution_time=$(echo "$end_time - $start_time" | bc) 
 timer 
 
-# --------- the end ---------
+
+# ----------------- the end -----------------
