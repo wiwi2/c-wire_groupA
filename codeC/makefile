@@ -7,7 +7,7 @@ EXEC = prog
 SRCS = main.c function.c
 
 # We define the directory for object files
-OBJ_DIR = $(CURDIR)/../tmp
+OBJ_DIR = ../tmp
 
 # List of object files generated from sources
 OBJS = $(SRCS:.c=.o)
@@ -16,22 +16,22 @@ OBJS = $(SRCS:.c=.o)
 OBJ_TMP = $(addprefix $(OBJ_DIR)/, $(notdir $(OBJS)))
 
 # Compile options
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g 
 
 # Compilation with GCC
-CC = gcc
+CC = gcc 
 
 # First default target (project compilation)
 all: $(EXEC)
 
 # Rule to create the executable
 $(EXEC): $(OBJ_TMP)
-	$(CC) $(CFLAGS) -o $@ $^
+	@$(CC) $(CFLAGS) -o $@ $^ 
 
 # Generic rule for compiling object files in the directory tmp/
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: %.c 
 	@mkdir -p $(OBJ_DIR)  # Create the tmp directory if it does not exist
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Cleaning generated files
 clean:
