@@ -7,12 +7,13 @@
 
 int main() {
     AVL* tree = NULL;
-    int id, capacity, consumption;
+    int id;
+    long int capacity, consumption;
     
     int h = 0;
 
     // Read data using scanf and insert in the AVL
-    while (scanf("%d;%d;%d", &id, &capacity, &consumption) == 3) {
+    while (scanf("%d;%ld;%ld", &id, &capacity, &consumption) == 3) {
          tree = insertAVL(tree, &h, id, capacity, consumption); 
     }
       
