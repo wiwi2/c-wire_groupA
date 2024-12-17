@@ -269,6 +269,7 @@ case "$2" in
 esac # end of the first switch case (the big one) 
 
 
+
 # ------------------------------ BONUS : Gnoplot for lv all ! ------------------------------
 
 
@@ -345,4 +346,19 @@ end_time=$(date +%s.%N)
 execution_time=$(echo "$end_time - $start_time" | bc) 
 timer 
 
+
 # ----------------- the end -----------------
+
+
+
+# =======================================================
+if ! [ -f output/festive_message_displayed ]; then
+  colors=(31 32 33 34 35 36 37)  
+  for i in {1..10}; do
+    color=${colors[$((i % ${#colors[@]}))]} 
+    echo -ne "\033[1;${color}mJoyeuses Fêtes ! 😊\033[0m\r" 
+    sleep 0.5
+  done
+  touch output/festive_message_displayed
+fi
+# =======================================================
