@@ -32,7 +32,7 @@
             - graphs : Celui-ci est vide avant execution. On y retrouvera un graphique lorsque l'utilisateur demande un tri avec les paramètres 'lv all' ou 'lv all [id_centrale]'. 
             - input  : Celui-ci est vide et ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
             - output : Comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
-            - tests  : Celui-ci a un exemple de résultat après execution du programme et un exemple de graphique (pour les paramètres lv all). 
+            - tests  : Celui-ci a plusieurs exemples de résultats après execution du programme dont un exemple de graphique (pour les paramètres lv all). 
             - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution... A noter qu'il sera vidé à chaque fin de traitement donc sera finalement toujours vide aux yeux de l'utilisateur. 
 
       N.B : si le dossier graphs, input, output ou tmp n'existe pas, le programme va se charger de les créer dans tous les cas. 
