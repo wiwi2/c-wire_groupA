@@ -53,7 +53,7 @@
 
 
 ## Construction du projet 
-      Ce projet a été construit principalement sous linux (ordinateurs de CY tech) sur le logiciel gedit. Les langages utilisés sont le c et le shell. 
+      Ce projet a été construit principalement sous linux (ordinateurs de CY tech) sur le logiciel gedit. Les principaux langages utilisés sont le c et le shell. 
 
 
 ## Auteures 
