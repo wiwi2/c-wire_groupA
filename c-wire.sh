@@ -219,7 +219,6 @@ case "$2" in
 
         tr '-' '0' < "$1" | grep -E "^$4" | awk -F ';' '{if($2 != 0 && $3 == 0 && $4 == 0) {printf("%d;%ld;%ld\n", $2,$7,$8)} }' | ./codeC/prog | sort -t ':' -k2 -n > "output/hvb_comp${suffix}.csv"
         sed -i "1s/^/HVB-Stations:Capacity:TotalConsumption(companies)\n/" "output/hvb_comp${suffix}.csv"
-    fi
     ;;
   "hva")
     if [[ "$3" == "comp" ]]; then
