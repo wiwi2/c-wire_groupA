@@ -173,7 +173,7 @@ AVL* balancingAVL(AVL* Tree){
 }
 
 
-// InsertAVL: inserts a new node in the AVL and returns the updated AVL 
+// InsertAVL: inserts a new node in the AVL and returns the updated AVL (inserts by ID of the station)
 AVL* insertAVL(AVL* tree, int* h, int id, long int capacity, long int conso) { 
     if (tree == NULL) {
         AVL* New = createNodeAVL(id, capacity, conso); // If the tree is empty, create a new node
