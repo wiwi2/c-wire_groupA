@@ -194,7 +194,7 @@ AVL* insertAVL(AVL* tree, int* h, int id, long int capacity, long int conso) {
         tree->pRight = insertAVL(tree->pRight, h, id, capacity, conso); // and always recursively
     } 
     else { // Case where the element is already present in the tree 
-        tree->sum_conso += conso;
+        tree->sum_conso += conso; // We do the sum of consumption here if we try to add the same node twice (so the same station) 
         *h = 0; // The height isn't changed
         return tree;
     }
