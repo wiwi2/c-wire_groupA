@@ -19,19 +19,19 @@ int min2(int id1, int id2);
 // Function to get the min between three values
 int min3(int id1, int id2, int id3); 
 
-// Function that do a left rotation to get the tree equilibrated 
+// Function that does a left rotation to get the tree balanced 
 AVL* LeftRotation(AVL* tree);
 
-// Function that do a right rotation to get the tree equilibrated     
+// Function that does a right rotation to get the tree balanced     
 AVL* RightRotation(AVL* tree); 
 
-// Function that do a double left rotation (a right rotation then a left one) to get the tree equilibrated
+// Function that does a double left rotation (a right rotation then a left one) to get the tree equilibrated
 AVL* DoubleLeftRotation(AVL* tree); 
 
-// Function that do a double right rotation (a left rotation then a right one) to get the tree equilibrated
+// Function that does a double right rotation (a left rotation then a right one) to get the tree equilibrated
 AVL* DoubleRightRotation(AVL* tree); 
 
-// Function that checks the equilibre of the tree and decide what rotation is suitable to get it equilibrated if it's not... 
+// Function that checks the balance of the tree and decides which rotation is suitable to get it balanced if it is not... 
 AVL* balancingAVL(AVL* tree); 
 
 // AVL insert function (by ID)
