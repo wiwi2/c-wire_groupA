@@ -275,11 +275,21 @@ esac # end of the first switch case (the big one)
 
 if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
 
-# We copy the whole output of the case concerned but the first line (we just want the numbers (id:capa:sum_conso) in a new file : we will need it to do the graph
-# But we won't need it any further after this manipulation, that explains why we put it in tmp...
+file="lv_all${suffix}.csv"
+
+# We put in a tmp file id:capa:sum_conso:sum_conso-capa in a new file : we will need it to do the graph
 # We use tail because we don't need the header line
-file="lv_all_minmax${suffix}.csv"
-tail -n +2 "output/$file" > "tmp/lv_info_graph${suffix}.csv" 
+# We sort everything in a decreasing manner according to the last column that we added 
+    tail -n +2 output/$file | awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$3 - $2) }' | sort -t ':' -k4 -nr > "tmp/lv_info${suffix}.csv"
+
+    # Then we cut it, because we don't need it any further, the lv stations are sorted out 
+    cut -d ':' --complement -f 4 "tmp/lv_info${suffix}.csv" > "tmp/lv_info_tmp${suffix}.csv" && \
+            mv "tmp/lv_info_tmp${suffix}.csv" "tmp/lv_info${suffix}.csv"
+
+    # We take the first 10 and the last 10 of this file, so the 10 most loaded stations and the 10 less loaded ones
+    # And we put it in a file that will help us do the graph 
+    head -n 10 "tmp/lv_info${suffix}.csv" > "tmp/lv_info_graph${suffix}.csv" 
+    tail -n 10 "tmp/lv_info${suffix}.csv" >> "tmp/lv_info_graph${suffix}.csv" 
 
 
 # We will modify the file to help us build the graph. First, we'll identify the green and red parts :
@@ -297,7 +307,6 @@ while IFS=':' read -r id capa sum_conso; do
         green_part=$capa
         red_part=$(( sum_conso - capa ))
     fi
-
     # Finally, we add the modified line in the output file that we'll need
     echo "$id:$capa:$sum_conso:$green_part:$red_part" >> "tmp/lv_info_graph_with_parts${suffix}.csv"
 done < "tmp/lv_info_graph${suffix}.csv" # in this loop, we used the copy created earlier. 
@@ -312,7 +321,7 @@ set output 'graphs/lv_all_minmax_graph$suffix.png'
 set datafile separator ":"
 
 # Set the legend position and other graphical settings (colors, positions...)
-set key left textcolor rgb "white"
+set key right textcolor rgb "white"
 set grid y
 set xtics rotate by 35 offset -1.5, -1.5
 set ytics nomirror
