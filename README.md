@@ -4,10 +4,10 @@
       Après avoir vérifié que vous avez les droits sur le script '.sh", vous pouvez lancer le programme avec : 
       ./c-wire.sh [chemin vers le fichier .csv] [station] [consommateur] [identifiant de centrale] 
 
-      Pour plus de détails sur les paramètres, regarder 'Traitement (objectifs) ou afficher l'aide avec -h. 
+      Pour plus de détails sur les paramètres, regarder 'Traitement (objectifs)' ou afficher l'aide avec -h. 
 
 ## Idée du projet
-      Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des désirs de l'utilisateur. 
+      Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des besoins de l'utilisateur. 
       Celui-ci utilise une partie shell pour trier des données, et une partie c pour calculer une partie de ces données. 
 
 ## Traitements (objectifs)
@@ -16,12 +16,12 @@
             hva : tri en fonction des stations HVA 
             lv  : tri en fonction des postes LV 
       2) Consommateurs
-            indiv : tri par rapport aux particuliers sous la station choisie. 
-            comp  : tri par rapport aux entreprises sous la station choisie. 
-            all   : tri par rapport tous types de consommateurs sous la station choisie (entreprises et particuliers). 
+            indiv : tri par rapport aux particuliers sous la station choisie
+            comp  : tri par rapport aux entreprises sous la station choisie 
+            all   : tri par rapport à tout types de consommateurs sous la station choisie (entreprises et particuliers)
       3) Autres 
-            -h : affiche l'aide. 
-                  N.B : peu importe la position de ce paramètre, l'aide sera affichée. 
+            -h : affiche l'aide
+                  N.B. : peu importe la position de ce paramètre, l'aide sera affichée.
       4) Optionnel
             identifiant d'une centrale : à ajouter après le choix de la station et du consommateur ; tri en fonction de la centrale choisie en plus de la station et du consommateur. 
             
