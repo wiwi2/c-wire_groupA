@@ -290,16 +290,16 @@ tail -n +2 "output/$file" > "tmp/lv_info_graph${suffix}.csv"
 while IFS=':' read -r id capa sum_conso; do
     # In the case that follows, there won't be any red part : the sum_conso is < or = to the capacity : no overload
     if (( $sum_conso <= $capa )); then 
-        partie_verte=$sum_conso
-        partie_rouge=0
+        green_part=$sum_conso
+        red_part=0
     # Here, sum_conso > capa so there will be a red part :
     else
-        partie_verte=$capa
-        partie_rouge=$(( sum_conso - capa ))
+        green_part=$capa
+        red_part=$(( sum_conso - capa ))
     fi
 
     # Finally, we add the modified line in the output file that we'll need
-    echo "$id:$capa:$sum_conso:$partie_verte:$partie_rouge" >> "tmp/lv_info_graph_with_parts${suffix}.csv"
+    echo "$id:$capa:$sum_conso:$green_part:$red_part" >> "tmp/lv_info_graph_with_parts${suffix}.csv"
 done < "tmp/lv_info_graph${suffix}.csv" # in this loop, we used the copy created earlier. 
 
 
