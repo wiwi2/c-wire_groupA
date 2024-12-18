@@ -23,7 +23,7 @@
             -h : affiche l'aide
                   N.B. : peu importe la position de ce paramètre, l'aide sera affichée.
       4) Optionnel
-            identifiant d'une centrale : à ajouter après le choix de la station et du consommateur ; tri en fonction de la centrale choisie en plus de la station et du consommateur. 
+            identifiant d'une centrale : à ajouter après le choix de la station et du consommateur ; tri en fonction de la centrale choisie en plus de la station et du consommateur 
             
 
 ## Composantes du projet
@@ -44,7 +44,7 @@
 
 
 ## Guide des commandes 
-      A partir du terminal, pour compiler : 
+      À partir du terminal, pour compiler : 
           1) Se placer dans le dossier c-wire_groupA-main avec la commande 'cd c-wire_groupA-main' après avoir téléchargé l'ensemble des composantes du projet.
           2) Etre sûr d'avoir les droits nécéssaires sur le script shell... On vous invite donc à taper la commande suivante avant de vous lancer : 'chmod 777 c-wire.sh'
           3) On vous invite à commencer par écrire dans le terminal : ' ./c-wire.sh -h ' et de regarder l'aide qui apparaitra. Cela vous permettra de passer en revue tous les traitements possibles. 
