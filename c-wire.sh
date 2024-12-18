@@ -352,13 +352,13 @@ timer
 
 
 # =======================================================
-if ! [ -f output/festive_message_displayed ]; then
+if ! [ -f output/festive_message_displayedu ]; then
   colors=(31 32 33 34 35 36 37)  
   for i in {1..10}; do
     color=${colors[$((i % ${#colors[@]}))]} 
-    echo -ne "\033[1;${color}mJoyeuses Fêtes ! 😊\033[0m\r" 
-    sleep 0.5
+    echo -ne "\033[1;${color}m 🎅🎄 We wish you a merry christmas and a happy new year ! 😊\033[0m\r" 
+    sleep 0.7
   done
-  touch output/festive_message_displayed
+  touch output/festive_message_displayedu
 fi
 # =======================================================
