@@ -236,11 +236,11 @@ case "$2" in
           # Extraction of the 10 stations with the lowest consumption, using head 
           echo "LV-Stations:Capacity:TotalConsumption(all)" > "output/lv_all_minmax${suffix}.csv"
           sort -t ':' -k3 -n "output/lv_all${suffix}.csv" | head -n 10 | \
-            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' > "tmp/temp_lv_all_minmax${suffix}.csv"
+            awk -F':' '{ printf("%d:%ld:%ld:%d\n", $1,$2,$3,$2 - $3) }' > "tmp/temp_lv_all_minmax${suffix}.csv"
 
           # Extraction of the 10 positions with the highest consumption, using tail 
           sort -t ':' -k3 -n "output/lv_all${suffix}.csv" | tail -n 10 | \
-            awk -F':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$2 - $3) }' >> "tmp/temp_lv_all_minmax${suffix}.csv"
+            awk -F':' '{ printf("%d:%ld:%ld:%d\n", $1,$2,$3,$2 - $3) }' >> "tmp/temp_lv_all_minmax${suffix}.csv"
 
           # We sort in function of the 4th colomn that is the absolute quantity of energy consumed (in a increasing manner to have the most loaded to the least loaded in term of difference...)
           # ...because we did capacity - sum_consumption earlier
@@ -277,10 +277,10 @@ if [[ $2 == "lv" ]] && [[ $3 == "all" ]]; then
 
 file="lv_all${suffix}.csv"
 
-# We put in a tmp file id:capa:sum_conso:sum_conso-capa in a new file : we will need it to do the graph
+# We put in a tmp file id:capa:sum_conso:capa-sum_conso in a new file : we will need it to do the graph
 # We use tail because we don't need the header line
-# We sort everything in a decreasing manner according to the last column that we added 
-    tail -n +2 output/$file | awk -F ':' '{ printf("%d:%ld:%ld:%ld\n", $1,$2,$3,$3 - $2) }' | sort -t ':' -k4 -nr > "tmp/lv_info${suffix}.csv"
+# We sort everything in a increasing manner according to the last column that we added 
+    tail -n +2 output/$file | awk -F ':' '{ printf("%d:%ld:%ld:%d\n", $1,$2,$3,$2 - $3) }' | sort -t ':' -k4 -n > "tmp/lv_info${suffix}.csv"
 
     # Then we cut it, because we don't need it any further, the lv stations are sorted out 
     cut -d ':' --complement -f 4 "tmp/lv_info${suffix}.csv" > "tmp/lv_info_tmp${suffix}.csv" && \
@@ -290,6 +290,7 @@ file="lv_all${suffix}.csv"
     # And we put it in a file that will help us do the graph 
     head -n 10 "tmp/lv_info${suffix}.csv" > "tmp/lv_info_graph${suffix}.csv" 
     tail -n 10 "tmp/lv_info${suffix}.csv" >> "tmp/lv_info_graph${suffix}.csv" 
+    
 
 
 # We will modify the file to help us build the graph. First, we'll identify the green and red parts :
@@ -307,9 +308,12 @@ while IFS=':' read -r id capa sum_conso; do
         green_part=$capa
         red_part=$(( sum_conso - capa ))
     fi
+
     # Finally, we add the modified line in the output file that we'll need
-    echo "$id:$capa:$sum_conso:$green_part:$red_part" >> "tmp/lv_info_graph_with_parts${suffix}.csv"
+    echo "$green_part:$red_part" >> "tmp/lv_info_graph_with_parts${suffix}.csv"
 done < "tmp/lv_info_graph${suffix}.csv" # in this loop, we used the copy created earlier. 
+
+
 
 
 # Gnuplot starting command
@@ -343,8 +347,8 @@ set xlabel "LV Stations" font "Open Sans Bold, 22" offset -1,0 textcolor rgb "wh
 set title "Energy consumption per LV station" font "Open Sans Bold, 25" textcolor rgb "white"
 
 # Plot the data with stacked bars (Green for capacity, Red for overload)
-plot 'tmp/lv_info_graph_with_parts$suffix.csv' using 4:xtic(1) title "Capacity" lc rgb "green" lw 3, \
-     '' using 5:xtic(1) title "Overload" lc rgb "red" lw 3 
+plot 'tmp/lv_info_graph_with_parts$suffix.csv' using 1:xtic(1) title "Capacity" lc rgb "green" lw 3, \
+     '' using 2:xtic(1) title "Overload" lc rgb "red" lw 3 
 
 EOF
 fi 
@@ -360,14 +364,17 @@ timer
 
 
 
+
+
+
 # =======================================================
-if ! [ -f output/festive_message_displayedu ]; then
+if ! [ -f output/festive_message_displayed ]; then
   colors=(31 32 33 34 35 36 37)  
   for i in {1..10}; do
     color=${colors[$((i % ${#colors[@]}))]} 
     echo -ne "\033[1;${color}m 🎅🎄 We wish you a merry christmas and a happy new year ! 😊\033[0m\r" 
     sleep 0.7
   done
-  touch output/festive_message_displayedu
+  touch output/festive_message_displayed
 fi
 # =======================================================
