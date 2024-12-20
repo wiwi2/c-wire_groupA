@@ -55,6 +55,9 @@
 ## Construction du projet 
       Ce projet a été construit principalement sous linux (ordinateurs de CY tech) sur le logiciel gedit. Les principaux langages utilisés sont le c et le shell. 
 
+## Attention - remarques
+      Le graphique généré par la commande 'lv all [...]' n'a pas de lien avec lv_all_minmax.csv. Le graphique ne représente pas les postes lv qui sont listés dans lv_all_minmax.csv, mais les 10 postes lv les plus chargés et les 10 lv les moins chargés. 
+
 
 ## Auteures 
       Wiame Boudella (https://github.com/wiwi2)
