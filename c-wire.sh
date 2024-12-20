@@ -346,6 +346,9 @@ set ylabel "Load (kWh)" font "Open Sans Bold, 22" textcolor rgb "white"
 set xlabel "LV Stations" font "Open Sans Bold, 22" offset -1,0 textcolor rgb "white"
 set title "Energy consumption per LV station" font "Open Sans Bold, 25" textcolor rgb "white"
 
+# Plus...
+set label 1 "🎅" at screen 0.95, 0.95 font ",30" textcolor rgb "black"
+
 # Plot the data with stacked bars (Green for capacity, Red for overload)
 plot 'tmp/lv_info_graph_with_parts$suffix.csv' using 1:xtic(1) title "Capacity" lc rgb "green" lw 3, \
      '' using 2:xtic(1) title "Overload" lc rgb "red" lw 3 
@@ -361,9 +364,6 @@ timer
 
 
 # ----------------- the end -----------------
-
-
-
 
 
 
