@@ -11,7 +11,7 @@ help() {
     echo "  file_path            : Path to the csv file. This parameter is obligatory." 
     echo "  type_station         : Type of station to process. Possible values : hvb, hva, lv. This parameter is obligatory."
     echo "  type_consumer        : Type of consumer to process. Possible values : comp, indiv, all. This parameter is obligatory."
-    echo "  powerplant_id          : Id of the power plant. There's only 5 power plants, so it has to be between 1 and 5 included. This parameter is optional : it will sort out the station chosen under the given power plant."
+    echo "  powerplant_id        : Id of the power plant. There's only 5 power plants, so it has to be between 1 and 5 included. This parameter is optional : it will sort out the station chosen under the given power plant."
     echo "  -h                   : Display this help."
     echo -e "\n \nMore explanations :\n"
     echo "  hvb ; hva ; lv : Are for a station (HV-B station, HV-A station, LV post)" 
