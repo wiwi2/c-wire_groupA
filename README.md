@@ -28,14 +28,16 @@
 
 ## Composantes du projet
       Le projet se compose de 6 dossiers : 
-            - codeC  : Celui-ci regroupe tout ce qui est nécéssaire au fonctionnement de la partie c du projet (i.e : fonctions, strucutres, main, makefile...) 
-            - graphs : Celui-ci est vide avant execution. On y retrouvera un graphique lorsque l'utilisateur demande un tri avec les paramètres 'lv all' ou 'lv all [id_centrale]'. 
+            - codeC  : Celui-ci regroupe tout ce qui est nécéssaire au fonctionnement de la partie c du projet (i.e : fonctions, structures, main, makefile...) 
+            - graphs : Celui-ci est vide avant exécution. On y retrouvera un graphique lorsque l'utilisateur demande un tri avec les paramètres 'lv all' ou 'lv all [id_centrale]'. 
             - input  : Celui-ci est vide et ne sert qu'à ranger le fichier '.csv' à trier à l'intérieur. Fondamentalement, celui-ci n'est pas nécéssaire au fonctionnement. 
             - output : Comme son nom l'indique, c'est le dossier dans lequel on retrouve les fichiers de sorties après execution du programme. 
             - tests  : Celui-ci a plusieurs exemples de résultats après execution du programme dont un exemple de graphique (pour les paramètres lv all). (Ces exemples sont commentés dans le document pdf disponible). 
-            - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution...)
+            - tmp    : Celui-ci regroupera tous les fichiers temporaires nécessaires au fonctionnement du programme (i.e : main.o, function.o, autres fichiers générés lors de l'execution permettant le tri...)
 
-      N.B : si le dossier graphs, input, output ou tmp n'existe pas, le programme va se charger de les créer dans tous les cas. 
+            Vous avez également accès à un document pdf 'Construction_projet.pdf' qui reprend les étapes de construcution de ce projet, comment nous avons divisé les tâches et les avons réparties dans le temps. Aussi, vous pouvez y trouver les limites fonctionnelles du projet et les sorties expliquées avec les fichiers temporaires générés. 
+
+      N.B : si le dossier graphs, input, output ou tmp n'existe pas, le programme va se charger de les créer dans tous les cas. Et à chaque lancement du programme, le fichier tmp est vidé en début.
 
 ## Utilisation - remarques
 
