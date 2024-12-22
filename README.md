@@ -1,12 +1,12 @@
 #groupeA-MEF2
-
+ 
 ## Utilisation 
       Après avoir vérifié que vous avez les droits sur le script '.sh", vous pouvez lancer le programme avec : 
       ./c-wire.sh [chemin vers le fichier .csv] [station] [consommateur] [identifiant de centrale] 
 
       Pour plus de détails sur les paramètres, regarder 'Traitement (objectifs)' ou afficher l'aide avec -h. 
 
-## Idée du projet
+## Idée générale du projet
       Ce projet a pour but de gérer un fichier '.csv' et de le trier en fonction des besoins de l'utilisateur. 
       Celui-ci utilise une partie shell pour trier des données, et une partie c pour calculer une partie de ces données. 
 
@@ -65,14 +65,3 @@
       Wiame Boudella (https://github.com/wiwi2)
       Sanem Sayed (https://github.com/snm-s)
       Sagana Srinivassane (https://github.com/sagana-21)
-
-
-
-
-
-
-
-          
-          
-
-
